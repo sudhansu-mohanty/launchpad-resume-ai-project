@@ -9,7 +9,8 @@ type Props = {
   onScored?: (result: ScoreResult) => void;
 };
 
-const API_URL = "http://api:8000/resume/score";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+const API_URL = `${API_BASE}/resume/score`;
 
 type Status = "idle" | "dragging" | "uploading" | "error";
 
@@ -108,7 +109,7 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
       onScored?.(payload);
       setStatus("idle");
     } catch {
-      setError("Unable to reach scoring API. Please try again in a moment.");
+      setError("Scoring service is currently unavailable. You can continue in demo mode.");
       hasError = true;
     } finally {
       if (!hasError) {

@@ -6,24 +6,31 @@ import RecruiterShowcase from "../components/RecruiterShowcase";
 import ResumeUploader from "../components/ResumeUploader";
 import ScoreCard, { ScoreResult } from "../components/ScoreCard";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+
 export default function HomePage() {
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [error, setError] = useState<string>("");
   const [apiOnline, setApiOnline] = useState(false);
+  const [apiHint, setApiHint] = useState("");
   const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
 
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        const response = await fetch("http://api:8000/health");
+        const response = await fetch(`${API_BASE}/health`);
         if (!response.ok) {
           setApiOnline(false);
+          setApiHint("API unavailable. UI remains active in demo mode.");
           return;
         }
         const payload = (await response.json()) as { status?: string };
-        setApiOnline(payload.status === "ok");
+        const online = payload.status === "ok";
+        setApiOnline(online);
+        setApiHint(online ? "" : "API unavailable. UI remains active in demo mode.");
       } catch {
         setApiOnline(false);
+        setApiHint("API unavailable. UI remains active in demo mode.");
       }
     };
 
@@ -192,6 +199,17 @@ export default function HomePage() {
             >
               {apiOnline ? "API Connected" : "API Offline"}
             </span>
+            {!apiOnline && apiHint ? (
+              <p
+                style={{
+                  margin: "0 0 12px",
+                  fontSize: "0.85rem",
+                  color: "#B0BEA9"
+                }}
+              >
+                {apiHint}
+              </p>
+            ) : null}
 
             <ResumeUploader
               onResult={(next) => {
