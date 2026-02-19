@@ -9,8 +9,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      api:
-        condition: service_started
+      - api
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -20,9 +19,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: launchpad-api
-    environment:
-      - DATABASE_URL=postgresql://launchpad:launchpad@postgres:5432/launchpad_db
-      - REDIS_URL=redis://redis:6379/0
     ports:
       - "8000:8000"
     depends_on:
@@ -66,4 +62,3 @@ services:
 volumes:
   postgres_data:
   redis_data:
-
