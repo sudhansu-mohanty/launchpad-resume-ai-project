@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #F1F7EE;
+  --color-muted: #B0BEA9;
+  --color-text: #92AA83;
+  --color-surface: #E0EDC5;
+  --color-accent: #E7F59E;
+  --color-primary: #92AA83;
+
+  --lp-bg: #F1F7EE;
+  --lp-surface: #E0EDC5;
+  --lp-border: #B0BEA9;
+  --lp-primary: #92AA83;
+  --lp-accent: #E7F59E;
+  --lp-text: #92AA83;
+  --lp-muted: #B0BEA9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.lp-hero-dark {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.lp-hero-dark-border {
+  border-color: rgb(176 190 169 / 0.45);
+}
