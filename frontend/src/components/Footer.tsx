@@ -1,4 +1,4 @@
-﻿export default function Footer() {
+export default function Footer() {
   return (
     <footer className="footer">
       <div className="row top">
@@ -16,14 +16,14 @@
         </div>
       </div>
       <div className="row bottom">
-        <p>(c) 2026 LaunchPad Resume AI</p>
+        <p>© 2026 LaunchPad Resume AI</p>
         <p>Built for confident applications.</p>
       </div>
 
       <style jsx>{`
         .footer {
-          border-top: 1px solid rgb(176 190 169 / 0.3);
-          padding: 20px 0 28px;
+          border-top: 1px solid rgba(146, 170, 131, 0.20);
+          padding: 24px 0 32px;
         }
         .row {
           display: flex;
@@ -32,38 +32,46 @@
           gap: 14px;
         }
         .top {
-          padding-bottom: 16px;
-          margin-bottom: 14px;
-          border-bottom: 1px solid rgb(176 190 169 / 0.2);
+          padding-bottom: 20px;
+          margin-bottom: 16px;
+          border-bottom: 1px solid rgba(146, 170, 131, 0.12);
         }
         .brand {
           margin: 0;
-          font-size: 1.18rem;
-          font-weight: 700;
-          color: #ffffff;
+          font-size: 1.1rem;
+          font-weight: 800;
+          letter-spacing: -0.035em;
+          color: #E8EDE6;
         }
         .brand span {
-          color: #e7f59e;
+          color: #C8E86A;
         }
         .copy {
           margin: 6px 0 0;
-          color: rgb(176 190 169 / 0.95);
-          font-size: 0.9rem;
+          color: #8A9E82;
+          font-size: 0.875rem;
+          line-height: 1.5;
         }
         .links {
           display: flex;
           flex-wrap: wrap;
-          gap: 14px;
+          gap: 4px;
         }
         .links a {
-          color: rgb(255 255 255 / 0.88);
+          color: rgba(232, 237, 230, 0.50);
           text-decoration: none;
-          font-size: 0.9rem;
+          font-size: 0.875rem;
+          padding: 4px 8px;
+          border-radius: 4px;
+          transition: color 0.15s ease;
+        }
+        .links a:hover {
+          color: #E8EDE6;
         }
         .bottom p {
           margin: 0;
-          color: rgb(176 190 169 / 0.9);
-          font-size: 0.84rem;
+          color: #4A5E43;
+          font-size: 0.8rem;
         }
         @media (max-width: 780px) {
           .row {

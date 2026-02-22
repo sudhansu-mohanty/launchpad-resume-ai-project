@@ -3,41 +3,17 @@
 import { useEffect, useState } from "react";
 import Faq from "../components/Faq";
 import Footer from "../components/Footer";
+import HeroSection from "../components/HeroSection";
 import Navbar from "../components/Navbar";
 import RecruiterShowcase from "../components/RecruiterShowcase";
 import ResumeUploader from "../components/ResumeUploader";
 import ScoreCard, { ScoreResult } from "../components/ScoreCard";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
 export default function HomePage() {
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [error, setError] = useState<string>("");
-  const [apiOnline, setApiOnline] = useState(false);
-  const [apiHint, setApiHint] = useState("");
-  const sectionPadding = "clamp(18px, 3.4vw, 30px) 0";
-
-  useEffect(() => {
-    const checkHealth = async () => {
-      try {
-        const response = await fetch(`${API_BASE}/health`);
-        if (!response.ok) {
-          setApiOnline(false);
-          setApiHint("API unavailable. UI remains active in demo mode.");
-          return;
-        }
-        const payload = (await response.json()) as { status?: string };
-        const online = payload.status === "ok";
-        setApiOnline(online);
-        setApiHint(online ? "" : "API unavailable. UI remains active in demo mode.");
-      } catch {
-        setApiOnline(false);
-        setApiHint("API unavailable. UI remains active in demo mode.");
-      }
-    };
-
-    checkHealth();
-  }, []);
+  const sectionPadding = "clamp(10px, 4.5vw, 20px) 0";
 
   useEffect(() => {
     const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal-feature]"));
@@ -102,100 +78,7 @@ export default function HomePage() {
         <Navbar />
 
         <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "0 clamp(14px, 2.4vw, 20px)" }}>
-          <section
-            style={{
-              padding: "96px 0 30px",
-              textAlign: "center"
-            }}
-          >
-            <h1 style={{ margin: "0 0 14px", fontSize: "2.5rem" }}>Upload your resume to start for free</h1>
-            <p style={{ margin: "0 auto", maxWidth: "720px", color: "rgb(255 255 255 / 0.82)" }}>
-              Get ATS-style scoring and clarity feedback in seconds so your resume is easier to scan
-              and easier to shortlist.
-            </p>
-            <button
-              type="button"
-              style={{
-                marginTop: "26px",
-                background: "#92AA83",
-                color: "#FFFFFF",
-                border: "1px solid rgb(176 190 169 / 0.55)",
-                borderRadius: "12px",
-                padding: "12px 18px",
-                fontWeight: 500
-              }}
-            >
-              Start Free Analysis
-            </button>
-
-            <div
-              style={{
-                marginTop: "18px",
-                display: "flex",
-                justifyContent: "center",
-                flexWrap: "wrap",
-                gap: "10px"
-              }}
-            >
-              {["No credit card", "ATS-friendly insights", "Fast PDF scoring"].map((chip) => (
-                <span
-                  key={chip}
-                  style={{
-                    border: "1px solid rgb(176 190 169 / 0.45)",
-                    background: "rgb(224 237 197 / 0.15)",
-                    color: "#FFFFFF",
-                    borderRadius: "999px",
-                    padding: "6px 12px",
-                    fontSize: "0.875rem"
-                  }}
-                >
-                  {chip}
-                </span>
-              ))}
-            </div>
-
-            <div
-              style={{
-                marginTop: "20px",
-                display: "grid",
-                gap: "12px",
-                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                textAlign: "left"
-              }}
-            >
-              {[
-                { title: "AI Powered", caption: "Smart scoring from resume structure and content." },
-                { title: "ATS Friendly", caption: "Keyword and formatting checks for ATS pipelines." },
-                { title: "Clarity Boost", caption: "Actionable feedback to improve readability fast." }
-              ].map((feature, index) => (
-                <article
-                  key={feature.title}
-                  data-reveal-feature
-                  className="feature-card"
-                  style={{
-                    border: "1px solid rgb(176 190 169 / 0.40)",
-                    background: "rgb(0 0 0 / 0.65)",
-                    borderRadius: "12px",
-                    padding: "12px",
-                    transitionDelay: `${index * 90}ms`
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: "12px",
-                      height: "12px",
-                      borderRadius: "999px",
-                      background: "#E7F59E",
-                      marginBottom: "10px"
-                    }}
-                  />
-                  <h3 style={{ margin: "0 0 6px", fontSize: "1rem", color: "#FFFFFF" }}>{feature.title}</h3>
-                  <p style={{ margin: 0, fontSize: "0.85rem", color: "#B0BEA9" }}>{feature.caption}</p>
-                </article>
-              ))}
-            </div>
-          </section>
+          <HeroSection />
 
           <section style={{ padding: sectionPadding }}>
             <div
@@ -207,32 +90,6 @@ export default function HomePage() {
                 backdropFilter: "blur(6px)"
               }}
             >
-              <span
-                style={{
-                  display: "inline-block",
-                  marginBottom: "12px",
-                  background: "#E0EDC5",
-                  border: `1px solid ${apiOnline ? "#92AA83" : "#B0BEA9"}`,
-                  color: "#000000",
-                  borderRadius: "999px",
-                  padding: "6px 10px",
-                  fontSize: "0.875rem"
-                }}
-              >
-                {apiOnline ? "API Connected" : "API Offline"}
-              </span>
-              {!apiOnline && apiHint ? (
-                <p
-                  style={{
-                    margin: "0 0 12px",
-                    fontSize: "0.85rem",
-                    color: "#B0BEA9"
-                  }}
-                >
-                  {apiHint}
-                </p>
-              ) : null}
-
               <ResumeUploader
                 onResult={(next) => {
                   setResult(next);
@@ -264,79 +121,95 @@ export default function HomePage() {
           </section>
 
           <section style={{ padding: sectionPadding }}>
-            <div
+            <span
               style={{
-                border: "1px solid rgb(176 190 169 / 0.45)",
-                background: "linear-gradient(168deg, rgb(0 0 0 / 0.78), rgb(9 14 11 / 0.88))",
-                borderRadius: "18px",
-                padding: "clamp(18px, 2.2vw, 28px)"
+                display: "block",
+                marginBottom: "12px",
+                fontSize: "0.72rem",
+                fontWeight: 600,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "#C8E86A",
               }}
             >
-              <h2 style={{ margin: 0, color: "#FFFFFF", fontSize: "clamp(1.35rem, 2.8vw, 2rem)" }}>
-                How it works
-              </h2>
-              <p
-                style={{
-                  margin: "10px 0 0",
-                  color: "rgb(176 190 169 / 0.95)"
-                }}
-              >
-                Get from upload to recruiter-ready polish in three focused steps.
-              </p>
-              <div
-                style={{
-                  marginTop: "16px",
-                  display: "grid",
-                  gap: "12px",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))"
-                }}
-              >
-                {[
-                  {
-                    step: "1",
-                    title: "Upload resume",
-                    detail: "Drop in your PDF and run an instant ATS-style check."
-                  },
-                  {
-                    step: "2",
-                    title: "Review score",
-                    detail: "See strengths, gaps, and role-fit issues recruiters scan first."
-                  },
-                  {
-                    step: "3",
-                    title: "Apply fixes",
-                    detail: "Use guided recommendations to improve clarity and impact fast."
-                  }
-                ].map((item) => (
-                  <article
-                    key={item.step}
+              How it works
+            </span>
+            <h2
+              style={{
+                margin: "0 0 28px",
+                fontSize: "clamp(1.5rem, 2.8vw, 2rem)",
+                fontWeight: 700,
+                letterSpacing: "-0.03em",
+                color: "#E8EDE6",
+                maxWidth: "520px",
+                lineHeight: 1.2,
+              }}
+            >
+              From upload to recruiter-ready in three steps
+            </h2>
+            <div
+              style={{
+                display: "grid",
+                gap: "0",
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                borderTop: "1px solid rgba(146,170,131,0.20)",
+              }}
+            >
+              {[
+                {
+                  step: "01",
+                  title: "Upload resume",
+                  detail: "Drop in your PDF and run an instant ATS-style check.",
+                },
+                {
+                  step: "02",
+                  title: "Review score",
+                  detail: "See strengths, gaps, and role-fit issues recruiters scan first.",
+                },
+                {
+                  step: "03",
+                  title: "Apply fixes",
+                  detail: "Use guided recommendations to improve clarity and impact fast.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.step}
+                  style={{
+                    borderRight: "1px solid rgba(146,170,131,0.14)",
+                    borderLeft: "1px solid rgba(146,170,131,0.14)",
+                    borderBottom: "1px solid rgba(146,170,131,0.14)",
+                    padding: "24px 24px 24px 12px",
+                  }}
+                >
+                  <span
                     style={{
-                      border: "1px solid rgb(176 190 169 / 0.35)",
-                      borderRadius: "12px",
-                      background: "rgb(0 0 0 / 0.58)",
-                      padding: "14px"
+                      display: "block",
+                      fontSize: "2.4rem",
+                      fontWeight: 800,
+                      letterSpacing: "-0.05em",
+                      color: "rgb(146, 170, 131)",
+                      lineHeight: 1,
+                      marginBottom: "16px",
                     }}
                   >
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        width: "28px",
-                        height: "28px",
-                        borderRadius: "999px",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "#E7F59E",
-                        color: "#000000",
-                        fontWeight: 700
-                      }}
-                    >
-                      {item.step}
-                    </span>
-                    <h3 style={{ margin: "10px 0 6px", color: "#FFFFFF" }}>{item.title}</h3>
-                    <p style={{ margin: 0, color: "#B0BEA9", fontSize: "0.9rem" }}>{item.detail}</p>
-                  </article>
-                ))}
-              </div>
+                    {item.step}
+                  </span>
+                  <h3
+                    style={{
+                      margin: "0 0 8px",
+                      fontSize: "0.95rem",
+                      fontWeight: 600,
+                      color: "#E8EDE6",
+                      letterSpacing: "-0.02em",
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "0.875rem", color: "#8A9E82", lineHeight: 1.65 }}>
+                    {item.detail}
+                  </p>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -379,12 +252,15 @@ export default function HomePage() {
                 type="button"
                 style={{
                   marginTop: "18px",
-                  border: "1px solid rgb(176 190 169 / 0.55)",
-                  borderRadius: "999px",
+                  border: "none",
+                  borderRadius: "6px",
                   background: "#92AA83",
-                  color: "#FFFFFF",
-                  padding: "11px 18px",
-                  fontWeight: 600
+                  color: "#080A09",
+                  padding: "11px 24px",
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                  letterSpacing: "-0.01em",
+                  cursor: "pointer",
                 }}
               >
                 Start free resume review
@@ -396,20 +272,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      <style jsx>{`
-        .feature-card {
-          opacity: 0;
-          transform: translateY(16px);
-          transition: opacity 420ms ease, transform 420ms ease;
-        }
-        .feature-card.in-view {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .feature-card.in-view:hover {
-          transform: translateY(-4px);
-        }
-      `}</style>
     </main>
   );
 }

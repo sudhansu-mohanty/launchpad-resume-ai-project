@@ -2,24 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Design Tokens ──────────────────────────────────────── */
 :root {
-  --color-bg: #F1F7EE;
-  --color-muted: #B0BEA9;
-  --color-text: #92AA83;
-  --color-surface: #E0EDC5;
-  --color-accent: #E7F59E;
-  --color-primary: #92AA83;
+  /* Background layers */
+  --lp-bg:        #080A09;
+  --lp-surface:   #0E110E;
+  --lp-surface-2: #161A15;
 
-  --lp-bg: #F1F7EE;
-  --lp-surface: #E0EDC5;
-  --lp-border: #B0BEA9;
-  --lp-primary: #92AA83;
-  --lp-accent: #E7F59E;
-  --lp-text: #92AA83;
-  --lp-muted: #B0BEA9;
+  /* Borders */
+  --lp-border:        rgba(146, 170, 131, 0.14);
+  --lp-border-mid:    rgba(146, 170, 131, 0.28);
+  --lp-border-strong: rgba(146, 170, 131, 0.45);
+
+  /* Brand */
+  --lp-sage: #92AA83;
+  --lp-lime: #C8E86A;
+
+  /* Text */
+  --lp-text:   #E8EDE6;
+  --lp-text-2: #8A9E82;
+  --lp-text-3: #4A5E43;
+
+  /* Spacing scale — 4px base */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-24: 96px;
+  --sp-32: 128px;
+
+  /* Typography */
+  --font-sans: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  1.875rem;   /* 30px */
+  --text-4xl:  2.25rem;    /* 36px */
+  --text-5xl:  3rem;       /* 48px */
+  --text-6xl:  3.75rem;    /* 60px */
+  --text-7xl:  4.5rem;     /* 72px */
+
+  /* Radius */
+  --r-xs:   4px;
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   16px;
+  --r-full: 9999px;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Legacy aliases (backward compat with existing components) ── */
+  --color-bg:      var(--lp-bg);
+  --color-muted:   var(--lp-text-2);
+  --color-text:    var(--lp-text);
+  --color-surface: var(--lp-surface);
+  --color-accent:  var(--lp-lime);
+  --color-primary: var(--lp-sage);
+  --lp-bg-legacy:  #F1F7EE;
+  --lp-primary:    var(--lp-sage);
+  --lp-accent:     var(--lp-lime);
+  --lp-muted:      var(--lp-text-2);
 }
 
-* {
+/* ─── Reset & Base ───────────────────────────────────────── */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -27,16 +83,68 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: var(--lp-bg);
+  color: var(--lp-text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* ─── Focus Ring ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--lp-lime);
+  outline-offset: 3px;
+  border-radius: var(--r-xs);
+}
+
+/* ─── Layout Utilities ───────────────────────────────────── */
+
+/* Full-bleed page container — use inside sections for max-width */
+.lp-container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 48px);
+}
+
+/* Narrow container for text-heavy sections */
+.lp-container-narrow {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 48px);
+}
+
+/* Section vertical rhythm */
+.lp-section {
+  padding: clamp(64px, 8vw, 112px) 0;
+}
+
+/* ─── Reveal Animations ──────────────────────────────────── */
+.feature-card {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 420ms var(--ease-out), transform 420ms var(--ease-out);
+}
+
+.feature-card.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature-card.in-view:hover {
+  transform: translateY(-3px);
+  border-color: var(--lp-border-mid) !important;
+}
+
+/* ─── Legacy class aliases ───────────────────────────────── */
 .lp-hero-dark {
-  background: #000000;
-  color: #FFFFFF;
+  background: var(--lp-bg);
+  color: var(--lp-text);
 }
 
 .lp-hero-dark-border {
-  border-color: rgb(176 190 169 / 0.45);
+  border-color: var(--lp-border-mid);
 }
