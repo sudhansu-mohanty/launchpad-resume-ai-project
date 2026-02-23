@@ -38,6 +38,7 @@ export default function Navbar() {
             scrolled ? "rgba(146,170,131,0.20)" : "transparent"
           }`,
           transition: "background 0.25s ease, border-color 0.25s ease",
+          animation: "lp-fade-down 0.5s cubic-bezier(0.16, 1, 0.3, 1) both",
         }}
       >
         <nav
@@ -54,6 +55,22 @@ export default function Navbar() {
           }}
         >
           {/* Logo */}
+          {/* TODO: Uncomment the SVG logo below and remove the text logo when the logo is finalised */}
+          {/* <a
+            href="/"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexShrink: 0,
+              textDecoration: "none",
+            }}
+          >
+            <img
+              src="/logo.svg"
+              alt="LaunchPad"
+              style={{ height: "38px", display: "block", width: "auto" }}
+            />
+          </a> */}
           <a
             href="/"
             style={{
@@ -119,6 +136,7 @@ export default function Navbar() {
       {/* Nav link hover styles */}
       <style>{`
         .lp-nav-link {
+          position: relative;
           color: rgba(232, 237, 230, 0.55);
           font-size: 0.875rem;
           font-weight: 500;
@@ -127,10 +145,27 @@ export default function Navbar() {
           padding: 6px 10px;
           border-radius: 6px;
           white-space: nowrap;
-          transition: color 0.15s ease;
+          transition: color 0.18s ease;
+          overflow: hidden;
+        }
+        .lp-nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: 3px;
+          left: 10px;
+          right: 10px;
+          height: 1px;
+          background: rgba(200, 232, 106, 0.6);
+          transform: scaleX(0);
+          transform-origin: right center;
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .lp-nav-link:hover {
           color: #E8EDE6;
+        }
+        .lp-nav-link:hover::after {
+          transform: scaleX(1);
+          transform-origin: left center;
         }
       `}</style>
     </>

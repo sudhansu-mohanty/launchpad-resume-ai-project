@@ -107,6 +107,23 @@ export default function RecruiterShowcase() {
         box-shadow: 0 18px 40px rgb(146 170 131 / 0.2);
         padding: 16px;
         text-align: left;
+        position: relative;
+        overflow: hidden;
+      }
+      .preview::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -70%;
+        width: 45%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(200, 232, 106, 0.07), transparent);
+        animation: scan 4.5s ease-in-out 1.2s infinite;
+        pointer-events: none;
+      }
+      @keyframes scan {
+        0%   { left: -70%; }
+        100% { left: 120%; }
       }
       .preview-header {
         display: flex;
@@ -133,8 +150,14 @@ export default function RecruiterShowcase() {
       .preview-line {
         height: 9px;
         border-radius: 999px;
-        background: rgb(176 190 169 / 0.45);
+        background: linear-gradient(90deg, rgb(176 190 169 / 0.45) 0%, rgb(200 232 106 / 0.12) 50%, rgb(176 190 169 / 0.45) 100%);
+        background-size: 200% auto;
         margin-bottom: 8px;
+        animation: shimmer-line 3.5s ease-in-out infinite;
+      }
+      @keyframes shimmer-line {
+        0%   { background-position: 200% center; }
+        100% { background-position: -200% center; }
       }
       .preview-line.wide {
         width: 94%;
@@ -164,11 +187,16 @@ export default function RecruiterShowcase() {
         box-shadow: 0 10px 24px rgb(0 0 0 / 0.38);
         opacity: 0;
         transform: translateY(16px);
-        transition: opacity 420ms ease, transform 420ms ease;
+        transition: opacity 420ms ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease;
       }
       .showcase.in-view .float {
         opacity: 1;
         transform: translateY(0);
+      }
+      .showcase.in-view .float:hover {
+        transform: translateY(-5px);
+        border-color: rgba(200, 232, 106, 0.38);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(200, 232, 106, 0.12);
       }
       .showcase.in-view .left-top {
         transition-delay: 80ms;

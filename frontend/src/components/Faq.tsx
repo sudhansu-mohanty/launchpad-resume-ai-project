@@ -43,11 +43,42 @@ export default function Faq() {
                 aria-expanded={expanded}
               >
                 <span>{item.q}</span>
-                <span className="icon" aria-hidden="true">
-                  {expanded ? "-" : "+"}
+                <span
+                  aria-hidden="true"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "20px",
+                    height: "20px",
+                    flexShrink: 0,
+                    fontSize: "1.15rem",
+                    fontWeight: 400,
+                    lineHeight: 1,
+                    color: "#e7f59e",
+                    transform: expanded ? "rotate(45deg)" : "rotate(0deg)",
+                    transition: "transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+                  }}
+                >
+                  +
                 </span>
               </button>
-              {expanded ? <p>{item.a}</p> : null}
+              <p
+                style={{
+                  margin: 0,
+                  maxHeight: expanded ? "200px" : "0",
+                  overflow: "hidden",
+                  paddingLeft: "14px",
+                  paddingRight: "14px",
+                  paddingBottom: expanded ? "14px" : "0",
+                  color: "rgb(176 190 169 / 0.96)",
+                  lineHeight: "1.55",
+                  fontSize: "0.92rem",
+                  transition: "max-height 0.42s cubic-bezier(0.16, 1, 0.3, 1), padding-bottom 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+                }}
+              >
+                {item.a}
+              </p>
             </article>
           );
         })}
@@ -76,6 +107,11 @@ export default function Faq() {
           border-radius: 12px;
           background: rgb(0 0 0 / 0.56);
           overflow: hidden;
+          transition: border-color 0.22s ease, box-shadow 0.22s ease;
+        }
+        .item:hover {
+          border-color: rgb(176 190 169 / 0.55);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
         }
         .trigger {
           width: 100%;
@@ -91,18 +127,6 @@ export default function Faq() {
           justify-content: space-between;
           text-align: left;
           gap: 14px;
-        }
-        .icon {
-          color: #e7f59e;
-          font-size: 1.1rem;
-          line-height: 1;
-        }
-        p {
-          margin: 0;
-          padding: 0 14px 14px;
-          color: rgb(176 190 169 / 0.96);
-          line-height: 1.55;
-          font-size: 0.92rem;
         }
       `}</style>
     </section>

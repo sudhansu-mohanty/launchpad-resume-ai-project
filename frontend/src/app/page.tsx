@@ -57,7 +57,8 @@ export default function HomePage() {
             height: "320px",
             borderRadius: "999px",
             background: "rgb(146 170 131 / 0.40)",
-            filter: "blur(80px)"
+            filter: "blur(80px)",
+            animation: "lp-drift-1 18s ease-in-out infinite",
           }}
         />
         <div
@@ -69,7 +70,8 @@ export default function HomePage() {
             height: "280px",
             borderRadius: "999px",
             background: "rgb(231 245 158 / 0.35)",
-            filter: "blur(80px)"
+            filter: "blur(80px)",
+            animation: "lp-drift-2 22s ease-in-out 4s infinite",
           }}
         />
       </div>
@@ -101,20 +103,6 @@ export default function HomePage() {
                 }}
               />
 
-              {error ? (
-                <p
-                  style={{
-                    marginTop: "16px",
-                    background: "#E7F59E",
-                    border: "1px solid #B0BEA9",
-                    color: "#000000",
-                    padding: "10px 12px",
-                    borderRadius: "10px"
-                  }}
-                >
-                  {error}
-                </p>
-              ) : null}
 
               {result ? <ScoreCard result={result} /> : null}
             </div>
@@ -171,14 +159,17 @@ export default function HomePage() {
                   title: "Apply fixes",
                   detail: "Use guided recommendations to improve clarity and impact fast.",
                 },
-              ].map((item) => (
+              ].map((item, index) => (
                 <div
                   key={item.step}
+                  className="feature-card"
+                  data-reveal-feature=""
                   style={{
                     borderRight: "1px solid rgba(146,170,131,0.14)",
                     borderLeft: "1px solid rgba(146,170,131,0.14)",
                     borderBottom: "1px solid rgba(146,170,131,0.14)",
                     padding: "24px 24px 24px 12px",
+                    transitionDelay: `${index * 130}ms`,
                   }}
                 >
                   <span
@@ -223,6 +214,8 @@ export default function HomePage() {
 
           <section style={{ padding: sectionPadding }}>
             <div
+              className="feature-card"
+              data-reveal-feature=""
               style={{
                 border: "1px solid rgb(176 190 169 / 0.45)",
                 borderRadius: "18px",
@@ -261,6 +254,17 @@ export default function HomePage() {
                   fontSize: "0.9rem",
                   letterSpacing: "-0.01em",
                   cursor: "pointer",
+                  transition: "transform 0.18s cubic-bezier(0.16,1,0.3,1), box-shadow 0.18s ease, background 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 8px 22px rgba(146,170,131,0.4)";
+                  e.currentTarget.style.background = "#A3BC94";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.background = "#92AA83";
                 }}
               >
                 Start free resume review

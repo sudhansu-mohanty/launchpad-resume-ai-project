@@ -3,6 +3,12 @@ export default function Footer() {
     <footer className="footer">
       <div className="row top">
         <div>
+          {/* TODO: Uncomment the SVG logo below and remove the text logo when the logo is finalised */}
+          {/* <img
+            src="/logo.svg"
+            alt="LaunchPad"
+            style={{ height: "34px", display: "block", width: "auto" }}
+          /> */}
           <p className="brand">
             Launch<span>Pad</span>
           </p>

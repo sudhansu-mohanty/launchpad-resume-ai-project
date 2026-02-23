@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
 export type ScoreResult = {
   filename: string;
   score: number;
@@ -45,6 +49,33 @@ function buildBreakdown(total: number): BreakdownItem[] {
 
 export default function ScoreCard({ result }: Props) {
   const total = Math.max(0, Math.min(100, result.score));
+  const [displayScore, setDisplayScore] = useState(0);
+  const [barsReady, setBarsReady] = useState(false);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    setDisplayScore(0);
+    setBarsReady(false);
+
+    const timeout = setTimeout(() => {
+      setBarsReady(true);
+      const duration = 900;
+      const start = performance.now();
+      const tick = (now: number) => {
+        const t = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        setDisplayScore(Math.round(eased * total));
+        if (t < 1) rafRef.current = requestAnimationFrame(tick);
+      };
+      rafRef.current = requestAnimationFrame(tick);
+    }, 80);
+
+    return () => {
+      clearTimeout(timeout);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [total]);
+
   const breakdown = buildBreakdown(total);
 
   return (
@@ -62,7 +93,17 @@ export default function ScoreCard({ result }: Props) {
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <h2 style={{ margin: 0, color: "#FFFFFF" }}>Your LaunchPad Score</h2>
-        <p style={{ margin: 0, fontSize: "1.8rem", fontWeight: 700, color: "#FFFFFF" }}>{total}/100</p>
+        <p
+          style={{
+            margin: 0,
+            fontSize: "1.8rem",
+            fontWeight: 700,
+            color: "#FFFFFF",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {displayScore}/100
+        </p>
       </div>
 
       <div
@@ -70,21 +111,23 @@ export default function ScoreCard({ result }: Props) {
           width: "100%",
           height: "10px",
           borderRadius: "999px",
-          background: "rgb(176 190 169 / 0.35)"
+          background: "rgb(176 190 169 / 0.35)",
+          overflow: "hidden",
         }}
       >
         <div
           style={{
-            width: `${total}%`,
+            width: barsReady ? `${total}%` : "0%",
             height: "100%",
             borderRadius: "999px",
-            background: "linear-gradient(90deg, rgb(146 170 131 / 0.95) 0%, rgb(231 245 158 / 0.95) 100%)"
+            background: "linear-gradient(90deg, rgb(146 170 131 / 0.95) 0%, rgb(231 245 158 / 0.95) 100%)",
+            transition: "width 900ms cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         />
       </div>
 
       <div style={{ display: "grid", gap: "8px" }}>
-        {breakdown.map((item) => (
+        {breakdown.map((item, index) => (
           <div
             key={item.label}
             style={{
@@ -94,7 +137,8 @@ export default function ScoreCard({ result }: Props) {
               background: "rgb(0 0 0 / 0.45)",
               border: "1px solid rgb(176 190 169 / 0.32)",
               borderRadius: "10px",
-              padding: "8px 10px"
+              padding: "8px 10px",
+              animation: `lp-fade-up 0.4s cubic-bezier(0.16,1,0.3,1) ${0.15 + index * 0.08}s both`,
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>

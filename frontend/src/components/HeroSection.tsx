@@ -17,7 +17,7 @@ export default function HeroSection() {
   const [score, setScore]           = useState(0);
   const [barsReady, setBarsReady]   = useState(false);
   const rafRef                      = useRef<number>(0);
-  const timerRef                    = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const timerRef                    = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     // Slight delay so the animation is perceived as a reaction to load
@@ -57,6 +57,30 @@ export default function HeroSection() {
           .lp-hero { grid-template-columns: 1fr; }
           .lp-hero-preview { display: none !important; }
         }
+
+        /* Staggered left-column entrance */
+        .hero-tag   { animation: lp-fade-up 0.55s cubic-bezier(0.16,1,0.3,1) 0.05s both; }
+        .hero-h1    { animation: lp-fade-up 0.65s cubic-bezier(0.16,1,0.3,1) 0.18s both; }
+        .hero-sub   { animation: lp-fade-up 0.55s cubic-bezier(0.16,1,0.3,1) 0.32s both; }
+        .hero-cta   { animation: lp-fade-up 0.55s cubic-bezier(0.16,1,0.3,1) 0.46s both; }
+        .hero-chips { animation: lp-fade-up 0.50s cubic-bezier(0.16,1,0.3,1) 0.60s both; }
+
+        /* Right side entrance */
+        .hero-right-entrance {
+          animation: lp-fade-up 0.70s cubic-bezier(0.16,1,0.3,1) 0.30s both;
+        }
+
+        /* Float the card + badge together */
+        .hero-float-wrap {
+          position: relative;
+          animation: lp-float 7s ease-in-out 1.8s infinite;
+        }
+
+        /* Pulsing status dots */
+        .hero-dot-pulse {
+          animation: lp-pulse-dot 2.4s ease-in-out 2s infinite;
+          border-radius: 999px;
+        }
       `}</style>
 
       <section className="lp-hero">
@@ -64,6 +88,7 @@ export default function HeroSection() {
         {/* ── Left: copy ─────────────────────────────── */}
         <div>
           <span
+            className="hero-tag"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -80,10 +105,10 @@ export default function HeroSection() {
             }}
           >
             <span
+              className="hero-dot-pulse"
               style={{
                 width: "5px",
                 height: "5px",
-                borderRadius: "999px",
                 background: "#C8E86A",
                 display: "inline-block",
               }}
@@ -92,6 +117,7 @@ export default function HeroSection() {
           </span>
 
           <h1
+            className="hero-h1"
             style={{
               margin: "0 0 18px",
               fontSize: "clamp(2.6rem, 5vw, 4rem)",
@@ -107,6 +133,7 @@ export default function HeroSection() {
           </h1>
 
           <p
+            className="hero-sub"
             style={{
               margin: "0 0 32px",
               fontSize: "clamp(0.95rem, 1.4vw, 1.05rem)",
@@ -119,7 +146,7 @@ export default function HeroSection() {
             resume is easier to scan and easier to shortlist.
           </p>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap" }}>
+          <div className="hero-cta" style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap" }}>
             <a
               href="#upload"
               style={{
@@ -134,10 +161,18 @@ export default function HeroSection() {
                 letterSpacing: "-0.01em",
                 cursor: "pointer",
                 textDecoration: "none",
-                transition: "background 0.15s ease",
+                transition: "background 0.18s ease, transform 0.18s cubic-bezier(0.16,1,0.3,1), box-shadow 0.18s ease",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#A3BC94"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "#92AA83"; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#A3BC94";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 20px rgba(146,170,131,0.35)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#92AA83";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
             >
               Analyze my resume
             </a>
@@ -146,7 +181,7 @@ export default function HeroSection() {
             </span>
           </div>
 
-          <div style={{ marginTop: "24px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
+          <div className="hero-chips" style={{ marginTop: "24px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
             {CHIPS.map((chip) => (
               <span
                 key={chip}
@@ -156,6 +191,15 @@ export default function HeroSection() {
                   borderRadius: "4px",
                   padding: "4px 10px",
                   fontSize: "0.78rem",
+                  transition: "border-color 0.2s ease, color 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(200,232,106,0.35)";
+                  e.currentTarget.style.color = "#8A9E82";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(146,170,131,0.20)";
+                  e.currentTarget.style.color = "#4A5E43";
                 }}
               >
                 {chip}
@@ -165,8 +209,8 @@ export default function HeroSection() {
         </div>
 
         {/* ── Right: score preview ────────────────────── */}
-        <div className="lp-hero-preview" style={{ position: "relative" }}>
-          {/* Ambient glow */}
+        <div className="lp-hero-preview hero-right-entrance" style={{ position: "relative" }}>
+          {/* Ambient glow — slow pulse */}
           <div
             style={{
               position: "absolute",
@@ -174,197 +218,204 @@ export default function HeroSection() {
               background:
                 "radial-gradient(ellipse at 60% 40%, rgba(146,170,131,0.13) 0%, transparent 68%)",
               pointerEvents: "none",
+              animation: "lp-fade-in 1.2s ease 0.5s both",
             }}
           />
 
-          {/* Card */}
-          <div
-            style={{
-              position: "relative",
-              background: "#0E110E",
-              border: "1px solid rgba(146,170,131,0.20)",
-              borderRadius: "14px",
-              padding: "24px",
-              boxShadow:
-                "0 32px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(146,170,131,0.06)",
-            }}
-          >
-            {/* Card header */}
+          {/* Float wrapper — card + badge bob together */}
+          <div className="hero-float-wrap">
+            {/* Card */}
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "18px",
+                position: "relative",
+                background: "#0E110E",
+                border: "1px solid rgba(146,170,131,0.20)",
+                borderRadius: "14px",
+                padding: "24px",
+                boxShadow:
+                  "0 32px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(146,170,131,0.06)",
+                transition: "box-shadow 0.3s ease",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
+              {/* Card header */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "18px",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
+                  <span
+                    className="hero-dot-pulse"
+                    style={{
+                      width: "7px",
+                      height: "7px",
+                      background: "#C8E86A",
+                      display: "inline-block",
+                      animationDelay: "2.5s",
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: "0.72rem",
+                      fontWeight: 600,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      color: "#8A9E82",
+                    }}
+                  >
+                    LaunchPad Score
+                  </span>
+                </div>
+
+                {/* Animated score number */}
                 <span
                   style={{
-                    width: "7px",
-                    height: "7px",
-                    borderRadius: "999px",
-                    background: "#C8E86A",
-                    display: "inline-block",
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: "0.72rem",
-                    fontWeight: 600,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "#8A9E82",
+                    fontSize: "2rem",
+                    fontWeight: 800,
+                    letterSpacing: "-0.04em",
+                    color: "#E8EDE6",
+                    lineHeight: 1,
+                    fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  LaunchPad Score
+                  {score}
+                  <span
+                    style={{ fontSize: "0.9rem", color: "#4A5E43", fontWeight: 500 }}
+                  >
+                    /100
+                  </span>
                 </span>
               </div>
 
-              {/* Animated score number */}
-              <span
-                style={{
-                  fontSize: "2rem",
-                  fontWeight: 800,
-                  letterSpacing: "-0.04em",
-                  color: "#E8EDE6",
-                  lineHeight: 1,
-                  fontVariantNumeric: "tabular-nums",
-                }}
-              >
-                {score}
-                <span
-                  style={{ fontSize: "0.9rem", color: "#4A5E43", fontWeight: 500 }}
-                >
-                  /100
-                </span>
-              </span>
-            </div>
-
-            {/* Main bar */}
-            <div
-              style={{
-                width: "100%",
-                height: "5px",
-                borderRadius: "999px",
-                background: "rgba(146,170,131,0.12)",
-                marginBottom: "22px",
-                overflow: "hidden",
-              }}
-            >
+              {/* Main bar */}
               <div
                 style={{
-                  height: "100%",
+                  width: "100%",
+                  height: "5px",
                   borderRadius: "999px",
-                  background: "linear-gradient(90deg, #92AA83 0%, #C8E86A 100%)",
-                  width: barsReady ? `${SCORE_TARGET}%` : "0%",
-                  transition: "width 1400ms cubic-bezier(0.16, 1, 0.3, 1)",
+                  background: "rgba(146,170,131,0.12)",
+                  marginBottom: "22px",
+                  overflow: "hidden",
                 }}
-              />
-            </div>
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    borderRadius: "999px",
+                    background: "linear-gradient(90deg, #92AA83 0%, #C8E86A 100%)",
+                    width: barsReady ? `${SCORE_TARGET}%` : "0%",
+                    transition: "width 1400ms cubic-bezier(0.16, 1, 0.3, 1)",
+                  }}
+                />
+              </div>
 
-            {/* Metric rows */}
-            <div style={{ display: "grid", gap: "12px" }}>
-              {METRICS.map((metric, i) => (
-                <div key={metric.label}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginBottom: "5px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: "0.78rem",
-                        color: "#8A9E82",
-                        letterSpacing: "-0.01em",
-                      }}
-                    >
-                      {metric.label}
-                    </span>
-                    <span style={{ fontSize: "0.78rem", color: "#4A5E43" }}>
-                      {metric.value}/{metric.max}
-                    </span>
-                  </div>
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "3px",
-                      borderRadius: "999px",
-                      background: "rgba(146,170,131,0.10)",
-                      overflow: "hidden",
-                    }}
-                  >
+              {/* Metric rows */}
+              <div style={{ display: "grid", gap: "12px" }}>
+                {METRICS.map((metric, i) => (
+                  <div key={metric.label}>
                     <div
                       style={{
-                        height: "100%",
-                        borderRadius: "999px",
-                        background: metric.color,
-                        width: barsReady
-                          ? `${(metric.value / metric.max) * 100}%`
-                          : "0%",
-                        transition: `width 700ms cubic-bezier(0.16, 1, 0.3, 1) ${140 + i * 110}ms`,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginBottom: "5px",
                       }}
-                    />
+                    >
+                      <span
+                        style={{
+                          fontSize: "0.78rem",
+                          color: "#8A9E82",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        {metric.label}
+                      </span>
+                      <span style={{ fontSize: "0.78rem", color: "#4A5E43" }}>
+                        {metric.value}/{metric.max}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "3px",
+                        borderRadius: "999px",
+                        background: "rgba(146,170,131,0.10)",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <div
+                        style={{
+                          height: "100%",
+                          borderRadius: "999px",
+                          background: metric.color,
+                          width: barsReady
+                            ? `${(metric.value / metric.max) * 100}%`
+                            : "0%",
+                          transition: `width 700ms cubic-bezier(0.16, 1, 0.3, 1) ${140 + i * 110}ms`,
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* Summary */}
+              <p
+                style={{
+                  margin: "18px 0 0",
+                  fontSize: "0.78rem",
+                  color: "#4A5E43",
+                  lineHeight: 1.6,
+                  borderTop: "1px solid rgba(146,170,131,0.10)",
+                  paddingTop: "14px",
+                }}
+              >
+                Strong keyword coverage. Improve bullet impact for top-quartile
+                shortlisting.
+              </p>
             </div>
 
-            {/* Summary */}
-            <p
+            {/* Floating badge */}
+            <div
               style={{
-                margin: "18px 0 0",
-                fontSize: "0.78rem",
-                color: "#4A5E43",
-                lineHeight: 1.6,
-                borderTop: "1px solid rgba(146,170,131,0.10)",
-                paddingTop: "14px",
+                position: "absolute",
+                bottom: "-14px",
+                right: "-14px",
+                background: "#0E110E",
+                border: "1px solid rgba(200,232,106,0.28)",
+                borderRadius: "6px",
+                padding: "7px 12px",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                boxShadow: "0 8px 28px rgba(0,0,0,0.55)",
               }}
             >
-              Strong keyword coverage. Improve bullet impact for top-quartile
-              shortlisting.
-            </p>
-          </div>
-
-          {/* Floating badge */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "-14px",
-              right: "-14px",
-              background: "#0E110E",
-              border: "1px solid rgba(200,232,106,0.28)",
-              borderRadius: "6px",
-              padding: "7px 12px",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              boxShadow: "0 8px 28px rgba(0,0,0,0.55)",
-            }}
-          >
-            <span
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "999px",
-                background: "#C8E86A",
-                display: "inline-block",
-                flexShrink: 0,
-              }}
-            />
-            <span
-              style={{
-                fontSize: "0.72rem",
-                fontWeight: 600,
-                color: "#C8E86A",
-                letterSpacing: "0.04em",
-                whiteSpace: "nowrap",
-              }}
-            >
-              ATS-optimized
-            </span>
+              <span
+                className="hero-dot-pulse"
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  background: "#C8E86A",
+                  display: "inline-block",
+                  flexShrink: 0,
+                  animationDelay: "2.8s",
+                }}
+              />
+              <span
+                style={{
+                  fontSize: "0.72rem",
+                  fontWeight: 600,
+                  color: "#C8E86A",
+                  letterSpacing: "0.04em",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                ATS-optimized
+              </span>
+            </div>
           </div>
         </div>
 

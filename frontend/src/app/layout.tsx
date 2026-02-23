@@ -13,6 +13,11 @@ export const metadata = {
   title: "LaunchPad — AI Resume Feedback",
   description:
     "Get ATS-style scoring and clarity feedback on your resume in seconds. Built for fast, recruiter-ready iteration.",
+  // TODO: Uncomment when the logo is finalised
+  // icons: {
+  //   icon: "/favicon.svg",
+  //   shortcut: "/favicon.svg",
+  // },
   openGraph: {
     title: "LaunchPad — AI Resume Feedback",
     description:
