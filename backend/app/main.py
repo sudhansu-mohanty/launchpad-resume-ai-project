@@ -8,7 +8,7 @@ import io
 
 app = FastAPI()
 
-# CORS configuration
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -27,7 +27,7 @@ async def extract_resume(file: UploadFile = File(...)):
 
     text = ""
 
-    # Safer file reading (avoids stream pointer issues)
+   
     contents = await file.read()
 
     with pdfplumber.open(io.BytesIO(contents)) as pdf:
@@ -38,19 +38,18 @@ async def extract_resume(file: UploadFile = File(...)):
 
     print("Extracted text length:", len(text))
 
-    # Extract email
+ 
     email = re.findall(
         r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
         text
     )
 
-    # Extract phone
     phone = re.findall(
         r"\+?\d[\d\s\-]{8,15}",
         text
     )
 
-    # Dummy scoring (keeping for now)
+    # Dummy scoring 
     score = 80
     structure = 16
     impact = 15
@@ -58,10 +57,10 @@ async def extract_resume(file: UploadFile = File(...)):
     clarity = 16
     formatting = 16
 
-    # Layer 2 — Rule-based analysis
+    # Rule-based analysis
     analysis = analyze_resume(text)
 
-    # Layer 3 — AI structuring (Local Ollama)
+    #  AI structuring (Local Ollama)
     structured_resume = ai_structure_resume(text)
 
     return {

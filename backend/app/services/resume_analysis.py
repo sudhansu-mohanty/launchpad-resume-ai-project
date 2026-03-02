@@ -2,13 +2,13 @@ import re
 
 def analyze_resume(text: str):
 
-    # Email
+  
     email = re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", text)
     
-    # Phone
+  
     phone = re.findall(r"\+?\d[\d\s\-]{8,15}", text)
 
-    # Skills (basic keyword detection)
+  
     common_skills = [
         "python", "java", "c++", "react", "node", 
         "aws", "docker", "sql", "machine learning",
@@ -22,7 +22,6 @@ def analyze_resume(text: str):
         if skill in lower_text:
             detected_skills.append(skill)
 
-    # Very basic section split (improve later)
     experience_section = ""
     education_section = ""
 
