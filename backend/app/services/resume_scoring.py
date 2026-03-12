@@ -13,27 +13,39 @@ headers = {
 }
 
 
-def ai_structure_resume(text: str):
+def score_resume(resume_text: str):
 
     prompt = f"""
-You are a resume parser AI.
+You are an ATS resume scoring system.
 
-Convert the resume below into structured JSON.
+Evaluate the resume using these categories:
 
-Return ONLY valid JSON.
+Skills (0-25)
+Experience (0-25)
+Projects (0-20)
+Education (0-10)
+Impact & Achievements (0-10)
+Formatting & Clarity (0-10)
 
-Structure:
+Rules:
+- Return ONLY valid JSON
+- total_score must equal sum of all categories
+
+Example format:
 {{
-"name":"",
-"email":"",
-"phone":"",
-"skills":[],
-"education":[],
-"experience":[]
+"skills":20,
+"experience":18,
+"projects":15,
+"education":8,
+"impact":7,
+"formatting":8,
+"total_score":76,
+"strengths":["good skills","clear experience"],
+"weaknesses":["add more quantified results"]
 }}
 
 Resume:
-{text}
+{resume_text}
 """
 
     payload = {
