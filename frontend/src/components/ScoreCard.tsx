@@ -4,9 +4,18 @@ import { useEffect, useRef, useState } from "react";
 
 export type ScoreResult = {
   filename: string;
-  score: number;
+  total_score: number;
+  categories: {
+    skills: number;
+    experience: number;
+    projects: number;
+    education: number;
+    impact: number;
+    formatting: number;
+  };
   summary: string;
-  highlights: string[];
+  strengths: string[];
+  weaknesses: string[];
 };
 
 type Props = {
@@ -26,29 +35,28 @@ const statusColor = {
   bad: "#B0BEA9"
 } as const;
 
-function buildBreakdown(total: number): BreakdownItem[] {
-  const labels = ["Structure", "Impact", "Keywords", "Clarity", "Formatting"];
-  const maxValues = [20, 20, 20, 20, 20];
-  const weights = [0.24, 0.22, 0.2, 0.18, 0.16];
-  const values = weights.map((weight, index) => {
-    if (index === weights.length - 1) {
-      return 0;
-    }
-    return Math.floor(total * weight);
-  });
-  const used = values.reduce((sum, value) => sum + value, 0);
-  values[values.length - 1] = Math.max(0, Math.min(20, total - used));
+function buildBreakdown(categories: any): BreakdownItem[] {
+  const items = [
+    { label: "Structure", value: categories.experience + categories.education, max: 20 },
+    { label: "Impact", value: categories.impact, max: 20 },
+    { label: "Keywords", value: categories.skills, max: 20 },
+    { label: "Clarity", value: categories.projects, max: 20 },
+    { label: "Formatting", value: categories.formatting, max: 20 }
+  ];
 
-  return labels.map((label, index) => {
-    const value = Math.max(0, Math.min(maxValues[index], values[index]));
-    const ratio = value / maxValues[index];
+  return items.map((item) => {
+    const ratio = item.value / item.max;
     const status = ratio >= 0.7 ? "good" : ratio >= 0.45 ? "warn" : "bad";
-    return { label, value, max: maxValues[index], status };
+    return {
+      ...item,
+      value: Math.max(0, Math.min(item.max, item.value)),
+      status
+    };
   });
 }
 
 export default function ScoreCard({ result }: Props) {
-  const total = Math.max(0, Math.min(100, result.score));
+  const total = Math.max(0, Math.min(100, result.total_score));
   const [displayScore, setDisplayScore] = useState(0);
   const [barsReady, setBarsReady] = useState(false);
   const rafRef = useRef<number>(0);
@@ -76,7 +84,7 @@ export default function ScoreCard({ result }: Props) {
     };
   }, [total]);
 
-  const breakdown = buildBreakdown(total);
+  const breakdown = buildBreakdown(result.categories);
 
   return (
     <section
