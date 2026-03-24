@@ -29,16 +29,15 @@ type BreakdownItem = {
   status: "good" | "warn" | "bad";
 };
 
-function buildBreakdown(total: number): BreakdownItem[] {
-  const labels = ["Structure", "Impact", "Keywords", "Clarity", "Formatting"];
-  const maxValues = [20, 20, 20, 20, 20];
-  const weights = [0.24, 0.22, 0.2, 0.18, 0.16];
-  const values = weights.map((weight, index) => {
-    if (index === weights.length - 1) return 0;
-    return Math.floor(total * weight);
-  });
-  const used = values.reduce((sum, value) => sum + value, 0);
-  values[values.length - 1] = Math.max(0, Math.min(20, total - used));
+function buildBreakdown(categories: ScoreResult["categories"]): BreakdownItem[] {
+  const items: { label: string; value: number; max: number }[] = [
+    { label: "Skills", value: categories.skills, max: 20 },
+    { label: "Experience", value: categories.experience, max: 20 },
+    { label: "Projects", value: categories.projects, max: 20 },
+    { label: "Education", value: categories.education, max: 20 },
+    { label: "Impact", value: categories.impact, max: 10 },
+    { label: "Formatting", value: categories.formatting, max: 10 },
+  ];
 
   return items.map((item) => {
     const ratio = item.value / item.max;
@@ -46,7 +45,7 @@ function buildBreakdown(total: number): BreakdownItem[] {
     return {
       ...item,
       value: Math.max(0, Math.min(item.max, item.value)),
-      status
+      status,
     };
   });
 }
