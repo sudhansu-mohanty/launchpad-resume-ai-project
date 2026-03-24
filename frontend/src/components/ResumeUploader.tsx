@@ -88,7 +88,6 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
         hasError = true;
         return;
       }
-
       const raw = await response.json();
 
       const payload: ScoreResult = {
@@ -106,7 +105,6 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
           formatting: raw.formatting_score,
         },
       };
-
       onResult(payload);
       onScored?.(payload);
       setStatus("idle");
