@@ -4,9 +4,18 @@ import { useEffect, useRef, useState } from "react";
 
 export type ScoreResult = {
   filename: string;
-  score: number;
+  total_score: number;
+  categories: {
+    skills: number;
+    experience: number;
+    projects: number;
+    education: number;
+    impact: number;
+    formatting: number;
+  };
   summary: string;
-  highlights: string[];
+  strengths: string[];
+  weaknesses: string[];
 };
 
 type Props = {
@@ -31,11 +40,14 @@ function buildBreakdown(total: number): BreakdownItem[] {
   const used = values.reduce((sum, value) => sum + value, 0);
   values[values.length - 1] = Math.max(0, Math.min(20, total - used));
 
-  return labels.map((label, index) => {
-    const value = Math.max(0, Math.min(maxValues[index], values[index]));
-    const ratio = value / maxValues[index];
+  return items.map((item) => {
+    const ratio = item.value / item.max;
     const status = ratio >= 0.7 ? "good" : ratio >= 0.45 ? "warn" : "bad";
-    return { label, value, max: maxValues[index], status };
+    return {
+      ...item,
+      value: Math.max(0, Math.min(item.max, item.value)),
+      status
+    };
   });
 }
 
@@ -52,7 +64,7 @@ const statusBar = {
 } as const;
 
 export default function ScoreCard({ result }: Props) {
-  const total = Math.max(0, Math.min(100, result.score));
+  const total = Math.max(0, Math.min(100, result.total_score));
   const [displayScore, setDisplayScore] = useState(0);
   const [barsReady, setBarsReady] = useState(false);
   const rafRef = useRef<number>(0);
@@ -80,7 +92,7 @@ export default function ScoreCard({ result }: Props) {
     };
   }, [total]);
 
-  const breakdown = buildBreakdown(total);
+  const breakdown = buildBreakdown(result.categories);
 
   return (
     <section className="mt-6 grid gap-4">

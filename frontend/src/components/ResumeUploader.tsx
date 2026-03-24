@@ -88,7 +88,25 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
         hasError = true;
         return;
       }
-      const payload = (await response.json()) as ScoreResult;
+
+      const raw = await response.json();
+
+      const payload: ScoreResult = {
+        filename: raw.filename,
+        total_score: raw.score,
+        summary: raw.summary,
+        strengths: raw.strengths || [],
+        weaknesses: raw.weaknesses || [],
+        categories: {
+          skills: raw.skills_score,
+          experience: raw.experience_score,
+          projects: raw.projects_score,
+          education: raw.education_score,
+          impact: raw.impact_score,
+          formatting: raw.formatting_score,
+        },
+      };
+
       onResult(payload);
       onScored?.(payload);
       setStatus("idle");
