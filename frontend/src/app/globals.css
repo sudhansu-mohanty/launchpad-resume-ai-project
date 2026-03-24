@@ -1,75 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* ─── Design Tokens ──────────────────────────────────────── */
-:root {
-  /* Background layers */
-  --lp-bg:        #080A09;
-  --lp-surface:   #0E110E;
-  --lp-surface-2: #161A15;
-
-  /* Borders */
-  --lp-border:        rgba(146, 170, 131, 0.14);
-  --lp-border-mid:    rgba(146, 170, 131, 0.28);
-  --lp-border-strong: rgba(146, 170, 131, 0.45);
-
-  /* Brand */
-  --lp-sage: #92AA83;
-  --lp-lime: #C8E86A;
-
-  /* Text */
-  --lp-text:   #E8EDE6;
-  --lp-text-2: #8A9E82;
-  --lp-text-3: #4A5E43;
-
-  /* Spacing scale — 4px base */
-  --sp-1:  4px;
-  --sp-2:  8px;
-  --sp-3:  12px;
-  --sp-4:  16px;
-  --sp-6:  24px;
-  --sp-8:  32px;
-  --sp-12: 48px;
-  --sp-16: 64px;
-  --sp-24: 96px;
-  --sp-32: 128px;
-
-  /* Typography */
-  --font-sans: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --text-xs:   0.75rem;    /* 12px */
-  --text-sm:   0.875rem;   /* 14px */
-  --text-base: 1rem;       /* 16px */
-  --text-lg:   1.125rem;   /* 18px */
-  --text-xl:   1.25rem;    /* 20px */
-  --text-2xl:  1.5rem;     /* 24px */
-  --text-3xl:  1.875rem;   /* 30px */
-  --text-4xl:  2.25rem;    /* 36px */
-  --text-5xl:  3rem;       /* 48px */
-  --text-6xl:  3.75rem;    /* 60px */
-  --text-7xl:  4.5rem;     /* 72px */
-
-  /* Radius */
-  --r-xs:   4px;
-  --r-sm:   6px;
-  --r-md:   10px;
-  --r-lg:   16px;
-  --r-full: 9999px;
-
-  /* Transitions */
+/* ─── Theme ──────────────────────────────────────────────── */
+@theme {
+  --font-sans: var(--font-dm-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --color-background: #000000;
+  --color-surface: #0a0a0a;
+  --color-surface-2: #111111;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-mid: rgba(255, 255, 255, 0.14);
+  --color-border-strong: rgba(255, 255, 255, 0.22);
+  --color-text: #ffffff;
+  --color-text-2: #a1a1aa;
+  --color-text-3: #52525b;
+  --color-accent: #ffffff;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* ── Legacy aliases (backward compat with existing components) ── */
-  --color-bg:      var(--lp-bg);
-  --color-muted:   var(--lp-text-2);
-  --color-text:    var(--lp-text);
-  --color-surface: var(--lp-surface);
-  --color-accent:  var(--lp-lime);
-  --color-primary: var(--lp-sage);
-  --lp-bg-legacy:  #F1F7EE;
-  --lp-primary:    var(--lp-sage);
-  --lp-accent:     var(--lp-lime);
-  --lp-muted:      var(--lp-text-2);
 }
 
 /* ─── Reset & Base ───────────────────────────────────────── */
@@ -79,138 +23,60 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 21px; /* 16px × 1.33 ≈ simulates 133% zoom */
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--lp-bg);
-  color: var(--lp-text);
+  background: #000000;
+  color: #ffffff;
   font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.65;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Focus Ring ─────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--lp-lime);
+  outline: 2px solid rgba(255, 255, 255, 0.5);
   outline-offset: 3px;
-  border-radius: var(--r-xs);
+  border-radius: 4px;
 }
 
-/* ─── Layout Utilities ───────────────────────────────────── */
-
-/* Full-bleed page container — use inside sections for max-width */
-.lp-container {
-  width: 100%;
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 0 clamp(16px, 3vw, 48px);
+/* ─── Keyframes ─────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Narrow container for text-heavy sections */
-.lp-container-narrow {
-  width: 100%;
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 clamp(16px, 3vw, 48px);
+@keyframes fade-down {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Section vertical rhythm */
-.lp-section {
-  padding: clamp(64px, 8vw, 112px) 0;
-}
-
-/* ─── Reveal Animations ──────────────────────────────────── */
-.feature-card {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 420ms var(--ease-out), transform 420ms var(--ease-out);
-}
-
-.feature-card.in-view {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.feature-card.in-view:hover {
-  transform: translateY(-3px);
-  border-color: var(--lp-border-mid) !important;
-}
-
-/* ─── Legacy class aliases ───────────────────────────────── */
-.lp-hero-dark {
-  background: var(--lp-bg);
-  color: var(--lp-text);
-}
-
-.lp-hero-dark-border {
-  border-color: var(--lp-border-mid);
-}
-
-/* ─── Keyframe Library ───────────────────────────────────── */
-
-/* Entrance animations */
-@keyframes lp-fade-up {
-  from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-
-@keyframes lp-fade-down {
-  from { opacity: 0; transform: translateY(-12px); }
-  to   { opacity: 1; transform: translateY(0);     }
-}
-
-@keyframes lp-fade-in {
+@keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-/* Floating / bobbing */
-@keyframes lp-float {
-  0%, 100% { transform: translateY(0px);  }
-  50%       { transform: translateY(-9px); }
+@keyframes pulse-ring {
+  0%, 100% { box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.4); }
+  50%      { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
 }
 
-@keyframes lp-float-sm {
-  0%, 100% { transform: translateY(0px);  }
-  50%       { transform: translateY(-5px); }
-}
-
-/* Pulsing glow ring for status dots */
-@keyframes lp-pulse-dot {
-  0%, 100% { box-shadow: 0 0 0 0px  rgba(200, 232, 106, 0.55); }
-  50%       { box-shadow: 0 0 0 7px  rgba(200, 232, 106, 0);   }
-}
-
-/* Slow organic drift for background orbs */
-@keyframes lp-drift-1 {
-  0%, 100% { transform: translate(0px,    0px)   scale(1);    }
-  33%       { transform: translate(30px,  -20px)  scale(1.06); }
-  66%       { transform: translate(-20px,  15px)  scale(0.96); }
-}
-
-@keyframes lp-drift-2 {
-  0%, 100% { transform: translate(0px,    0px)   scale(1);    }
-  40%       { transform: translate(-24px,  20px)  scale(1.05); }
-  70%       { transform: translate(16px,  -16px)  scale(0.97); }
-}
-
-/* Horizontal shimmer sweep */
-@keyframes lp-shimmer {
+@keyframes shimmer {
   0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
+  100% { background-position: 200% center; }
 }
 
-/* Scanning light across a panel */
-@keyframes lp-scan {
+@keyframes scan {
   0%   { left: -70%; }
-  100% { left: 120%;  }
+  100% { left: 120%; }
 }
 
-/* Spin */
-@keyframes lp-spin {
-  from { transform: rotate(0deg);   }
-  to   { transform: rotate(360deg); }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
 }

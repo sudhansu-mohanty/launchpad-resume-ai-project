@@ -20,20 +20,12 @@ type BreakdownItem = {
   status: "good" | "warn" | "bad";
 };
 
-const statusColor = {
-  good: "#92AA83",
-  warn: "#E7F59E",
-  bad: "#B0BEA9"
-} as const;
-
 function buildBreakdown(total: number): BreakdownItem[] {
   const labels = ["Structure", "Impact", "Keywords", "Clarity", "Formatting"];
   const maxValues = [20, 20, 20, 20, 20];
   const weights = [0.24, 0.22, 0.2, 0.18, 0.16];
   const values = weights.map((weight, index) => {
-    if (index === weights.length - 1) {
-      return 0;
-    }
+    if (index === weights.length - 1) return 0;
     return Math.floor(total * weight);
   });
   const used = values.reduce((sum, value) => sum + value, 0);
@@ -46,6 +38,18 @@ function buildBreakdown(total: number): BreakdownItem[] {
     return { label, value, max: maxValues[index], status };
   });
 }
+
+const statusDot = {
+  good: "bg-white",
+  warn: "bg-zinc-400",
+  bad: "bg-zinc-600",
+} as const;
+
+const statusBar = {
+  good: "bg-white",
+  warn: "bg-zinc-400",
+  bad: "bg-zinc-600",
+} as const;
 
 export default function ScoreCard({ result }: Props) {
   const total = Math.max(0, Math.min(100, result.score));
@@ -79,110 +83,59 @@ export default function ScoreCard({ result }: Props) {
   const breakdown = buildBreakdown(total);
 
   return (
-    <section
-      style={{
-        marginTop: "20px",
-        background: "rgb(0 0 0 / 0.72)",
-        border: "1px solid rgb(176 190 169 / 0.40)",
-        borderRadius: "14px",
-        padding: "18px",
-        display: "grid",
-        gap: "14px",
-        color: "rgb(255 255 255 / 0.92)"
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-        <h2 style={{ margin: 0, color: "#FFFFFF" }}>Your LaunchPad Score</h2>
-        <p
-          style={{
-            margin: 0,
-            fontSize: "1.8rem",
-            fontWeight: 700,
-            color: "#FFFFFF",
-            fontVariantNumeric: "tabular-nums",
-          }}
-        >
-          {displayScore}/100
+    <section className="mt-6 grid gap-4">
+      <div className="flex items-end justify-between">
+        <h2 className="text-lg font-bold tracking-tight text-white">Your LaunchPad Score</h2>
+        <p className="text-3xl font-extrabold tracking-tight text-white tabular-nums">
+          {displayScore}
+          <span className="text-base font-medium text-zinc-600">/100</span>
         </p>
       </div>
 
-      <div
-        style={{
-          width: "100%",
-          height: "10px",
-          borderRadius: "999px",
-          background: "rgb(176 190 169 / 0.35)",
-          overflow: "hidden",
-        }}
-      >
+      <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
         <div
+          className="h-full rounded-full bg-gradient-to-r from-zinc-400 to-white"
           style={{
             width: barsReady ? `${total}%` : "0%",
-            height: "100%",
-            borderRadius: "999px",
-            background: "linear-gradient(90deg, rgb(146 170 131 / 0.95) 0%, rgb(231 245 158 / 0.95) 100%)",
             transition: "width 900ms cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         />
       </div>
 
-      <div style={{ display: "grid", gap: "8px" }}>
+      <div className="space-y-2">
         {breakdown.map((item, index) => (
           <div
             key={item.label}
+            className="flex items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] px-4 py-3"
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              background: "rgb(0 0 0 / 0.45)",
-              border: "1px solid rgb(176 190 169 / 0.32)",
-              borderRadius: "10px",
-              padding: "8px 10px",
-              animation: `lp-fade-up 0.4s cubic-bezier(0.16,1,0.3,1) ${0.15 + index * 0.08}s both`,
+              animation: `fade-up 0.4s cubic-bezier(0.16,1,0.3,1) ${0.15 + index * 0.08}s both`,
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "999px",
-                  background: statusColor[item.status]
-                }}
-              />
-              <span style={{ color: "rgb(255 255 255 / 0.90)" }}>{item.label}</span>
+            <div className="flex items-center gap-3">
+              <span className={`h-2 w-2 rounded-full ${statusDot[item.status]}`} />
+              <span className="text-sm tracking-tight text-zinc-300">{item.label}</span>
             </div>
-            <span style={{ color: "rgb(255 255 255 / 0.86)" }}>
-              {item.value}/{item.max}
-            </span>
+            <div className="flex items-center gap-3">
+              <div className="h-1 w-16 overflow-hidden rounded-full bg-white/5">
+                <div
+                  className={`h-full rounded-full ${statusBar[item.status]}`}
+                  style={{
+                    width: barsReady ? `${(item.value / item.max) * 100}%` : "0%",
+                    transition: `width 700ms cubic-bezier(0.16, 1, 0.3, 1) ${200 + index * 100}ms`,
+                  }}
+                />
+              </div>
+              <span className="w-10 text-right text-xs tracking-tight text-zinc-500 tabular-nums">
+                {item.value}/{item.max}
+              </span>
+            </div>
           </div>
         ))}
       </div>
 
-      <p style={{ margin: 0, color: "rgb(255 255 255 / 0.80)" }}>{result.summary}</p>
+      <p className="text-sm leading-relaxed tracking-tight text-zinc-400">{result.summary}</p>
 
-      <button
-        type="button"
-        onMouseEnter={(event) => {
-          event.currentTarget.style.boxShadow = "0 0 0 1px rgb(231 245 158 / 0.30), 0 10px 24px rgb(231 245 158 / 0.20)";
-        }}
-        onMouseLeave={(event) => {
-          event.currentTarget.style.boxShadow = "none";
-        }}
-        style={{
-          background: "#92AA83",
-          color: "#FFFFFF",
-          border: "1px solid rgb(176 190 169 / 0.55)",
-          borderRadius: "10px",
-          padding: "10px 14px",
-          cursor: "pointer",
-          transition: "box-shadow 150ms ease"
-        }}
-      >
-        Import Resume
-      </button>
-
-      <p style={{ margin: 0, color: "rgb(176 190 169 / 0.95)", fontSize: "0.875rem" }}>
+      <p className="text-xs tracking-tight text-zinc-600">
         Tip: strengthen role-specific keywords to improve ATS relevance.
       </p>
     </section>

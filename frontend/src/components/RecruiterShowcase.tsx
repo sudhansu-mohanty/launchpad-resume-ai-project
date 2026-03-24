@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 export default function RecruiterShowcase() {
   const showcaseRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const node = showcaseRef.current;
-    if (!node) {
-      return;
-    }
+    if (!node) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -26,242 +25,103 @@ export default function RecruiterShowcase() {
   }, []);
 
   return (
-    <>
-      <div ref={showcaseRef} className="showcase">
-        <h2>See Your Resume Through a Recruiter Lens</h2>
-        <p>
+    <div className="relative rounded-2xl border border-white/[0.08] p-1">
+      <GlowingEffect
+        spread={40}
+        glow={true}
+        disabled={false}
+        proximity={64}
+        inactiveZone={0.01}
+        borderWidth={3}
+      />
+      <div ref={showcaseRef} className="showcase group relative rounded-xl border border-white/5 bg-black p-6 text-center sm:p-10">
+        <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          See Your Resume Through a Recruiter Lens
+        </h2>
+        <p className="mx-auto mt-3 max-w-2xl text-sm tracking-tight text-zinc-500 sm:text-base">
           A preview-first review layer highlights fit, structure, and role alignment before your
           resume reaches a hiring team.
         </p>
 
-        <div className="stage">
-          <div className="preview">
-            <div className="preview-header">
-              <span className="badge">Candidate Preview</span>
-              <span className="score">82 Match</span>
+        <div className="relative mx-auto mt-8 max-w-3xl" style={{ minHeight: "320px" }}>
+          {/* Resume preview */}
+          <div className="preview relative mx-auto w-full max-w-lg overflow-hidden rounded-xl border border-white/10 bg-black/60 p-5 text-left backdrop-blur-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs tracking-tight text-zinc-400">
+                Candidate Preview
+              </span>
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-bold tracking-tight text-black">
+                82 Match
+              </span>
             </div>
-            <div className="preview-line wide" />
-            <div className="preview-line med" />
-            <div className="preview-line short" />
-            <div className="preview-block">
-              <div className="preview-line wide" />
-              <div className="preview-line med" />
-              <div className="preview-line short" />
-            </div>
-            <div className="preview-line wide" />
-            <div className="preview-line med" />
-            <div className="preview-line short" />
+
+            {[94, 72, 48, 94, 72, 48].map((w, i) => (
+              <div
+                key={i}
+                className={`mb-2 h-2 rounded-full ${i === 3 ? "mt-4" : ""}`}
+                style={{
+                  width: `${w}%`,
+                  background: "linear-gradient(90deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.12) 100%)",
+                  backgroundSize: "200% auto",
+                  animation: "shimmer 3.5s ease-in-out infinite",
+                }}
+              />
+            ))}
+
+            {/* Scan line */}
+            <div
+              className="pointer-events-none absolute top-0 left-0 h-full w-[45%]"
+              style={{
+                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)",
+                animation: "scan 4.5s ease-in-out 1.2s infinite",
+              }}
+            />
           </div>
 
-          <article className="float left-top">
-            <span className="dot" />
-            <h3>Top Skills Detected</h3>
-            <p>Product strategy, cross-functional execution, stakeholder updates.</p>
-          </article>
+          {/* Floating cards */}
+          <div className="float-card absolute top-2 left-0 w-48 rounded-xl border border-white/10 bg-black/80 p-3 text-left shadow-xl backdrop-blur-md max-lg:static max-lg:mt-3 max-lg:w-full">
+            <span className="mb-2 inline-block h-2.5 w-2.5 rounded-full bg-white" />
+            <h3 className="mb-1 text-sm font-semibold tracking-tight text-white">Top Skills Detected</h3>
+            <p className="text-xs leading-relaxed tracking-tight text-zinc-500">
+              Product strategy, cross-functional execution, stakeholder updates.
+            </p>
+          </div>
 
-          <article className="float right-mid">
-            <span className="dot" />
-            <h3>ATS Readability</h3>
-            <p>Section hierarchy and keyword signals are clearly parsed.</p>
-          </article>
+          <div className="float-card absolute top-28 right-0 w-48 rounded-xl border border-white/10 bg-black/80 p-3 text-left shadow-xl backdrop-blur-md max-lg:static max-lg:mt-3 max-lg:w-full" style={{ transitionDelay: "100ms" }}>
+            <span className="mb-2 inline-block h-2.5 w-2.5 rounded-full bg-white" />
+            <h3 className="mb-1 text-sm font-semibold tracking-tight text-white">ATS Readability</h3>
+            <p className="text-xs leading-relaxed tracking-tight text-zinc-500">
+              Section hierarchy and keyword signals are clearly parsed.
+            </p>
+          </div>
 
-          <article className="float bottom">
-            <h4>Need stronger impact?</h4>
-            <button type="button">Generate stronger bullets</button>
-          </article>
+          <div className="float-card absolute right-12 bottom-1 w-52 rounded-xl border border-white/10 bg-black/80 p-3 text-left shadow-xl backdrop-blur-md max-lg:static max-lg:mt-3 max-lg:w-full" style={{ transitionDelay: "200ms" }}>
+            <h4 className="mb-2 text-sm font-semibold tracking-tight text-white">Need stronger impact?</h4>
+            <button
+              type="button"
+              className="w-full rounded-lg bg-white px-3 py-2 text-xs font-bold tracking-tight text-black transition-all hover:bg-zinc-200"
+            >
+              Generate stronger bullets
+            </button>
+          </div>
         </div>
-      </div>
 
-      <style jsx>{`
-      .showcase {
-        border: 1px solid rgb(176 190 169 / 0.45);
-        border-radius: 18px;
-        background: linear-gradient(165deg, rgb(0 0 0 / 0.84) 0%, rgb(8 14 10 / 0.9) 100%);
-        box-shadow: inset 0 0 0 1px rgb(146 170 131 / 0.1), 0 16px 45px rgb(0 0 0 / 0.35);
-        padding: clamp(16px, 2vw, 24px);
-        text-align: center;
-        color: #ffffff;
-      }
-      h2 {
-        margin: 0;
-        font-size: clamp(1.5rem, 3.2vw, 2.15rem);
-      }
-      p {
-        margin: 10px auto 0;
-        max-width: 760px;
-        color: rgb(176 190 169 / 0.95);
-      }
-      .stage {
-        position: relative;
-        margin: 12px auto 0;
-        max-width: 940px;
-        min-height: 320px;
-      }
-      .preview {
-        width: min(560px, 94%);
-        margin: 0 auto;
-        min-height: 288px;
-        border-radius: 14px;
-        border: 1px solid rgb(176 190 169 / 0.45);
-        background: rgb(0 0 0 / 0.8);
-        box-shadow: 0 18px 40px rgb(146 170 131 / 0.2);
-        padding: 16px;
-        text-align: left;
-        position: relative;
-        overflow: hidden;
-      }
-      .preview::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -70%;
-        width: 45%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(200, 232, 106, 0.07), transparent);
-        animation: scan 4.5s ease-in-out 1.2s infinite;
-        pointer-events: none;
-      }
-      @keyframes scan {
-        0%   { left: -70%; }
-        100% { left: 120%; }
-      }
-      .preview-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 12px;
-      }
-      .badge {
-        border: 1px solid rgb(176 190 169 / 0.45);
-        background: rgb(224 237 197 / 0.16);
-        color: #ffffff;
-        border-radius: 999px;
-        padding: 5px 10px;
-        font-size: 0.76rem;
-      }
-      .score {
-        border-radius: 999px;
-        background: rgb(231 245 158 / 0.86);
-        color: #000000;
-        padding: 5px 10px;
-        font-size: 0.76rem;
-        font-weight: 700;
-      }
-      .preview-line {
-        height: 9px;
-        border-radius: 999px;
-        background: linear-gradient(90deg, rgb(176 190 169 / 0.45) 0%, rgb(200 232 106 / 0.12) 50%, rgb(176 190 169 / 0.45) 100%);
-        background-size: 200% auto;
-        margin-bottom: 8px;
-        animation: shimmer-line 3.5s ease-in-out infinite;
-      }
-      @keyframes shimmer-line {
-        0%   { background-position: 200% center; }
-        100% { background-position: -200% center; }
-      }
-      .preview-line.wide {
-        width: 94%;
-      }
-      .preview-line.med {
-        width: 72%;
-      }
-      .preview-line.short {
-        width: 48%;
-        margin-bottom: 0;
-      }
-      .preview-block {
-        border-radius: 12px;
-        border: 1px solid rgb(176 190 169 / 0.36);
-        background: rgb(224 237 197 / 0.12);
-        margin: 10px 0;
-        padding: 12px;
-      }
-      .float {
-        position: absolute;
-        width: min(220px, 42%);
-        border-radius: 12px;
-        border: 1px solid rgb(176 190 169 / 0.45);
-        background: rgb(0 0 0 / 0.78);
-        padding: 12px;
-        text-align: left;
-        box-shadow: 0 10px 24px rgb(0 0 0 / 0.38);
-        opacity: 0;
-        transform: translateY(16px);
-        transition: opacity 420ms ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease;
-      }
-      .showcase.in-view .float {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      .showcase.in-view .float:hover {
-        transform: translateY(-5px);
-        border-color: rgba(200, 232, 106, 0.38);
-        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(200, 232, 106, 0.12);
-      }
-      .showcase.in-view .left-top {
-        transition-delay: 80ms;
-      }
-      .showcase.in-view .right-mid {
-        transition-delay: 170ms;
-      }
-      .showcase.in-view .bottom {
-        transition-delay: 250ms;
-      }
-      .left-top {
-        left: 0;
-        top: 10px;
-      }
-      .right-mid {
-        right: 0;
-        top: 110px;
-      }
-      .bottom {
-        right: 48px;
-        bottom: 4px;
-      }
-      .dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        background: #e7f59e;
-        margin-bottom: 8px;
-      }
-      h3 {
-        margin: 0 0 6px;
-        font-size: 0.94rem;
-      }
-      h4 {
-        margin: 0 0 8px;
-        font-size: 0.9rem;
-      }
-      .float p {
-        margin: 0;
-        color: rgb(176 190 169 / 0.95);
-        font-size: 0.8rem;
-      }
-      button {
-        width: 100%;
-        border: 1px solid rgb(176 190 169 / 0.55);
-        border-radius: 10px;
-        background: #92aa83;
-        color: #ffffff;
-        padding: 8px 10px;
-        font-size: 0.82rem;
-        cursor: pointer;
-      }
-      @media (max-width: 900px) {
-        .stage {
-          min-height: auto;
-          display: grid;
-          gap: 12px;
-        }
-        .float {
-          position: static;
-          width: 100%;
-        }
-      }
-    `}</style>
-    </>
+        <style jsx>{`
+          .float-card {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 420ms ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease;
+          }
+          .showcase.in-view .float-card {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          .showcase.in-view .float-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+          }
+        `}</style>
+      </div>
+    </div>
   );
 }

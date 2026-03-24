@@ -1,23 +1,18 @@
 import "./globals.css";
 import type { ReactNode } from "react";
-import { Inter } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
   display: "swap",
-  weight: ["400", "500", "700", "800"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata = {
   title: "LaunchPad — AI Resume Feedback",
   description:
     "Get ATS-style scoring and clarity feedback on your resume in seconds. Built for fast, recruiter-ready iteration.",
-  // TODO: Uncomment when the logo is finalised
-  // icons: {
-  //   icon: "/favicon.svg",
-  //   shortcut: "/favicon.svg",
-  // },
   openGraph: {
     title: "LaunchPad — AI Resume Feedback",
     description:
@@ -32,8 +27,8 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body>{children}</body>
+    <html lang="en" className={dmSans.variable}>
+      <body className="bg-black text-white antialiased">{children}</body>
     </html>
   );
 }

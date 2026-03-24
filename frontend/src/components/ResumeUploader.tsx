@@ -31,22 +31,18 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
       setError("Please select one PDF file.");
       return false;
     }
-
     const nameLooksPdf = candidate.name.toLowerCase().endsWith(".pdf");
     const isPdfType = candidate.type === "application/pdf";
     if (!isPdfType && !nameLooksPdf) {
       setError("Only PDF files are allowed.");
       return false;
     }
-
     return true;
   };
 
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const picked = event.target.files?.[0] ?? null;
-    if (!validatePdf(picked)) {
-      return;
-    }
+    if (!validatePdf(picked)) return;
     setFile(picked);
     setStatus("idle");
     setErrorMessage("");
@@ -54,27 +50,19 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
 
   const onDragOver = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    if (status !== "uploading") {
-      setStatus("dragging");
-    }
+    if (status !== "uploading") setStatus("dragging");
   };
 
   const onDragLeave = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    if (status !== "uploading") {
-      setStatus(errorMessage ? "error" : "idle");
-    }
+    if (status !== "uploading") setStatus(errorMessage ? "error" : "idle");
   };
 
   const onDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    if (status === "uploading") {
-      return;
-    }
+    if (status === "uploading") return;
     const dropped = event.dataTransfer.files?.[0] ?? null;
-    if (!validatePdf(dropped)) {
-      return;
-    }
+    if (!validatePdf(dropped)) return;
     setFile(dropped);
     setStatus("idle");
     setErrorMessage("");
@@ -82,9 +70,7 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!validatePdf(file)) {
-      return;
-    }
+    if (!validatePdf(file)) return;
     const formData = new FormData();
     formData.append("file", file);
 
@@ -94,16 +80,14 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
     try {
       const response = await fetch(API_URL, {
         method: "POST",
-        body: formData
+        body: formData,
       });
-
       if (!response.ok) {
         const payload = await response.json().catch(() => ({ detail: "Upload failed" }));
         setError(payload.detail ?? "Upload failed");
         hasError = true;
         return;
       }
-
       const payload = (await response.json()) as ScoreResult;
       onResult(payload);
       onScored?.(payload);
@@ -112,54 +96,30 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
       setError("Scoring service is currently unavailable. You can continue in demo mode.");
       hasError = true;
     } finally {
-      if (!hasError) {
-        setStatus("idle");
-      }
+      if (!hasError) setStatus("idle");
     }
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      style={{
-        background: "rgba(0, 0, 0, 0.62)",
-        border: "1px solid rgba(176, 190, 169, 0.40)",
-        borderRadius: "14px",
-        padding: "18px",
-        display: "grid",
-        gap: "12px",
-        color: "rgba(255, 255, 255, 0.92)"
-      }}
-    >
-      <label
-        htmlFor="resume"
-        style={{ display: "block", color: "#FFFFFF", fontWeight: 600, fontSize: "0.95rem" }}
-      >
+    <form onSubmit={onSubmit} className="grid gap-4">
+      <label htmlFor="resume" className="text-sm font-semibold tracking-tight text-white">
         Resume PDF
       </label>
+
       <div
         role="button"
         tabIndex={0}
         onClick={() => {
-          if (status !== "uploading") {
-            inputRef.current?.click();
-          }
+          if (status !== "uploading") inputRef.current?.click();
         }}
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
-        style={{
-          border: "1px dashed rgba(176, 190, 169, 0.65)",
-          borderRadius: "12px",
-          background: "rgba(0, 0, 0, 0.45)",
-          padding: "20px",
-          cursor: status === "uploading" ? "not-allowed" : "pointer",
-          boxShadow:
-            status === "dragging"
-              ? "0 0 0 1px rgba(231, 245, 158, 0.35), 0 12px 26px rgba(231, 245, 158, 0.20)"
-              : "0 0 0 1px rgba(176, 190, 169, 0.22)",
-          transition: "box-shadow 150ms ease, border-color 150ms ease"
-        }}
+        className={`cursor-pointer rounded-xl border border-dashed p-8 text-center transition-all ${
+          status === "dragging"
+            ? "border-white/40 bg-white/5 shadow-lg shadow-white/5"
+            : "border-white/15 bg-white/[0.02] hover:border-white/25 hover:bg-white/[0.04]"
+        } ${status === "uploading" ? "pointer-events-none opacity-50" : ""}`}
       >
         <input
           ref={inputRef}
@@ -168,52 +128,44 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
           accept="application/pdf"
           onChange={onFileChange}
           disabled={status === "uploading"}
-          style={{ display: "none" }}
+          className="hidden"
         />
-        <p style={{ margin: 0, color: "rgba(255, 255, 255, 0.88)", lineHeight: 1.5 }}>
-          {file ? `Selected: ${file.name}` : "Click to upload or drag and drop one PDF"}
+
+        <div className="mb-3 text-zinc-600">
+          <svg className="mx-auto h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+        </div>
+
+        <p className="text-sm tracking-tight text-zinc-300">
+          {file ? file.name : "Click to upload or drag and drop"}
         </p>
-        <p style={{ margin: "8px 0 0", color: "rgba(176, 190, 169, 0.95)", fontSize: "0.82rem" }}>
-          PDF only, one file at a time
-        </p>
+        <p className="mt-1 text-xs tracking-tight text-zinc-600">PDF only, one file at a time</p>
       </div>
+
       <button
         type="submit"
-        onMouseEnter={(event) => {
-          event.currentTarget.style.boxShadow =
-            "0 0 0 1px rgba(231, 245, 158, 0.30), 0 10px 24px rgba(231, 245, 158, 0.20)";
-        }}
-        onMouseLeave={(event) => {
-          event.currentTarget.style.boxShadow = "none";
-        }}
         disabled={status === "uploading"}
-        style={{
-          background: "#92AA83",
-          color: "#FFFFFF",
-          border: "1px solid rgba(176, 190, 169, 0.55)",
-          borderRadius: "10px",
-          padding: "10px 14px",
-          cursor: status === "uploading" ? "not-allowed" : "pointer",
-          transition: "box-shadow 150ms ease",
-          fontWeight: 600
-        }}
+        className="rounded-lg bg-white px-5 py-3 text-sm font-bold tracking-tight text-black transition-all hover:bg-zinc-200 hover:shadow-lg hover:shadow-white/10 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {status === "uploading" ? "Scoring..." : "Upload and Score"}
+        {status === "uploading" ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Scoring...
+          </span>
+        ) : (
+          "Upload and Score"
+        )}
       </button>
-      {status === "error" && errorMessage ? (
-        <p
-          style={{
-            margin: 0,
-            background: "#E7F59E",
-            border: "1px solid #B0BEA9",
-            borderRadius: "10px",
-            padding: "10px 12px",
-            color: "#000000"
-          }}
-        >
+
+      {status === "error" && errorMessage && (
+        <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm tracking-tight text-red-300">
           {errorMessage}
-        </p>
-      ) : null}
+        </div>
+      )}
     </form>
   );
 }

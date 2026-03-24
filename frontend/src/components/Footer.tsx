@@ -1,91 +1,32 @@
 export default function Footer() {
   return (
-    <footer className="footer">
-      <div className="row top">
+    <footer className="border-t border-white/5 pt-8 pb-10">
+      <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
         <div>
-          {/* TODO: Uncomment the SVG logo below and remove the text logo when the logo is finalised */}
-          {/* <img
-            src="/logo.svg"
-            alt="LaunchPad"
-            style={{ height: "34px", display: "block", width: "auto" }}
-          /> */}
-          <p className="brand">
-            Launch<span>Pad</span>
+          <p className="text-lg font-extrabold tracking-tight text-white">
+            Launch<span className="text-zinc-500">Pad</span>
           </p>
-          <p className="copy">AI resume feedback built for fast, recruiter-ready iteration.</p>
+          <p className="mt-1 text-sm tracking-tight text-zinc-600">
+            AI resume feedback built for fast, recruiter-ready iteration.
+          </p>
         </div>
-        <div className="links">
-          <a href="#">Product</a>
-          <a href="#">Pricing</a>
-          <a href="#">Privacy</a>
-          <a href="#">Contact</a>
+        <div className="flex flex-wrap gap-1">
+          {["Product", "Pricing", "Privacy", "Contact"].map((link) => (
+            <a
+              key={link}
+              href="#"
+              className="rounded-md px-3 py-1 text-sm tracking-tight text-zinc-600 transition-colors hover:text-zinc-300"
+            >
+              {link}
+            </a>
+          ))}
         </div>
-      </div>
-      <div className="row bottom">
-        <p>© 2026 LaunchPad Resume AI</p>
-        <p>Built for confident applications.</p>
       </div>
 
-      <style jsx>{`
-        .footer {
-          border-top: 1px solid rgba(146, 170, 131, 0.20);
-          padding: 24px 0 32px;
-        }
-        .row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 14px;
-        }
-        .top {
-          padding-bottom: 20px;
-          margin-bottom: 16px;
-          border-bottom: 1px solid rgba(146, 170, 131, 0.12);
-        }
-        .brand {
-          margin: 0;
-          font-size: 1.1rem;
-          font-weight: 800;
-          letter-spacing: -0.035em;
-          color: #E8EDE6;
-        }
-        .brand span {
-          color: #C8E86A;
-        }
-        .copy {
-          margin: 6px 0 0;
-          color: #8A9E82;
-          font-size: 0.875rem;
-          line-height: 1.5;
-        }
-        .links {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 4px;
-        }
-        .links a {
-          color: rgba(232, 237, 230, 0.50);
-          text-decoration: none;
-          font-size: 0.875rem;
-          padding: 4px 8px;
-          border-radius: 4px;
-          transition: color 0.15s ease;
-        }
-        .links a:hover {
-          color: #E8EDE6;
-        }
-        .bottom p {
-          margin: 0;
-          color: #4A5E43;
-          font-size: 0.8rem;
-        }
-        @media (max-width: 780px) {
-          .row {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-        }
-      `}</style>
+      <div className="mt-8 flex flex-col items-start justify-between gap-2 sm:flex-row">
+        <p className="text-xs tracking-tight text-zinc-700">&copy; 2026 LaunchPad Resume AI</p>
+        <p className="text-xs tracking-tight text-zinc-700">Built for confident applications.</p>
+      </div>
     </footer>
   );
 }

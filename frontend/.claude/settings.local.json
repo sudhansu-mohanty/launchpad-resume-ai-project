@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:\\\\Users\\\\sudha\\\\OneDrive\\\\Desktop\\\\AI-Projects\\\\projects\\\\Launchpad-Resume-AI-Service\\\\frontend\" && npm run lint 2>&1)",
+      "Bash(cd \"C:\\\\Users\\\\sudha\\\\OneDrive\\\\Desktop\\\\AI-Projects\\\\projects\\\\Launchpad-Resume-AI-Service\\\\frontend\" && npx tsc --noEmit 2>)",
+      "Bash(cd \"C:\\\\Users\\\\sudha\\\\OneDrive\\\\Desktop\\\\AI-Projects\\\\projects\\\\Launchpad-Resume-AI-Service\" && git add .github/workflows/deploy.yml frontend/next.config.mjs frontend/public/.nojekyll frontend/public/logo.svg frontend/public/favicon.svg frontend/src/app/globals.css frontend/src/app/layout.tsx frontend/src/app/page.tsx frontend/src/components/Faq.tsx frontend/src/components/Footer.tsx frontend/src/components/HeroSection.tsx frontend/src/components/Navbar.tsx frontend/src/components/RecruiterShowcase.tsx frontend/src/components/ScoreCard.tsx CLAUDE.md && git commit -m \"$\\(cat <<'EOF'\nAdd animations, SVG logo assets, and GitHub Pages deployment\n\n- Add CSS keyframe library \\(lp-fade-up, lp-float, lp-pulse-dot, lp-drift, etc.\\)\n- Staggered hero entrance, floating card, pulsing dots, drifting bg orbs\n- Smooth FAQ accordion, ScoreCard count-up, RecruiterShowcase scan line\n- Add logo.svg and favicon.svg to public/; wired into layout + Navbar/Footer\n  \\(SVG logo commented out in Navbar/Footer pending logo finalisation\\)\n- Fix duplicate error message in ResumeUploader / page.tsx\n- Add GitHub Actions workflow for Pages deployment \\(frontend/out → gh-pages\\)\n- Set basePath/assetPrefix in next.config.mjs when GITHUB_ACTIONS=true\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\" 2>&1)",
+      "Bash(cd \"C:\\\\Users\\\\sudha\\\\OneDrive\\\\Desktop\\\\AI-Projects\\\\projects\\\\Launchpad-Resume-AI-Service\" && git push origin main 2>&1)"
+    ]
+  }
+}

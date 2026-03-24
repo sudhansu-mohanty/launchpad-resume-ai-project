@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 
 const links = [
   { label: "Resume Builder", href: "#" },
-  { label: "ATS Analysis", href: "#" },
+  { label: "ATS Analysis", href: "#upload" },
   { label: "Pricing", href: "#" },
 ];
 
@@ -19,163 +19,41 @@ export default function Navbar() {
   }, []);
 
   return (
-    <>
-      <header
-        style={{
-          position: "sticky",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          width: "100%",
-          height: "60px",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
-          background: scrolled
-            ? "rgba(8, 10, 9, 0.92)"
-            : "rgba(8, 10, 9, 0.60)",
-          borderBottom: `1px solid ${
-            scrolled ? "rgba(146,170,131,0.20)" : "transparent"
-          }`,
-          transition: "background 0.25s ease, border-color 0.25s ease",
-          animation: "lp-fade-down 0.5s cubic-bezier(0.16, 1, 0.3, 1) both",
-        }}
-      >
-        <nav
-          style={{
-            width: "100%",
-            maxWidth: "1120px",
-            height: "60px",
-            margin: "0 auto",
-            padding: "0 clamp(16px, 3vw, 48px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "24px",
-          }}
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 h-14 transition-all duration-300 ${
+        scrolled
+          ? "bg-black/90 backdrop-blur-xl border-b border-white/10"
+          : "bg-transparent border-b border-transparent"
+      }`}
+      style={{ animation: "fade-down 0.5s cubic-bezier(0.16,1,0.3,1) both" }}
+    >
+      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
+        <a
+          href="/"
+          className="text-lg font-extrabold tracking-tight text-white no-underline"
         >
-          {/* Logo */}
-          {/* TODO: Uncomment the SVG logo below and remove the text logo when the logo is finalised */}
-          {/* <a
-            href="/"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexShrink: 0,
-              textDecoration: "none",
-            }}
-          >
-            <img
-              src="/logo.svg"
-              alt="LaunchPad"
-              style={{ height: "38px", display: "block", width: "auto" }}
-            />
-          </a> */}
-          <a
-            href="/"
-            style={{
-              fontWeight: 800,
-              fontSize: "1.1rem",
-              letterSpacing: "-0.035em",
-              color: "#E8EDE6",
-              textDecoration: "none",
-              flexShrink: 0,
-              lineHeight: 1,
-            }}
-          >
-            Launch<span style={{ color: "#C8E86A" }}>Pad</span>
-          </a>
+          Launch<span className="text-zinc-400">Pad</span>
+        </a>
 
-          {/* Nav links */}
-          <div
-            style={{
-              display: "flex",
-              gap: "2px",
-              alignItems: "center",
-              flex: 1,
-              justifyContent: "center",
-            }}
-          >
-            {links.map((link) => (
-              <NavLink key={link.label} href={link.href}>
-                {link.label}
-              </NavLink>
-            ))}
-          </div>
+        <div className="hidden items-center gap-1 sm:flex">
+          {links.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="rounded-md px-3 py-1.5 text-sm font-medium tracking-tight text-zinc-500 transition-colors hover:text-white"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
 
-          {/* CTA */}
-          <a
-            href="#upload"
-            style={{
-              background: "#92AA83",
-              color: "#080A09",
-              borderRadius: "6px",
-              padding: "8px 18px",
-              fontSize: "0.875rem",
-              fontWeight: 700,
-              letterSpacing: "-0.01em",
-              textDecoration: "none",
-              flexShrink: 0,
-              display: "inline-flex",
-              alignItems: "center",
-              whiteSpace: "nowrap",
-              transition: "background 0.15s ease, transform 0.15s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#A3BC94";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#92AA83";
-            }}
-          >
-            Try for free
-          </a>
-        </nav>
-      </header>
-
-      {/* Nav link hover styles */}
-      <style>{`
-        .lp-nav-link {
-          position: relative;
-          color: rgba(232, 237, 230, 0.55);
-          font-size: 0.875rem;
-          font-weight: 500;
-          letter-spacing: -0.01em;
-          text-decoration: none;
-          padding: 6px 10px;
-          border-radius: 6px;
-          white-space: nowrap;
-          transition: color 0.18s ease;
-          overflow: hidden;
-        }
-        .lp-nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: 3px;
-          left: 10px;
-          right: 10px;
-          height: 1px;
-          background: rgba(200, 232, 106, 0.6);
-          transform: scaleX(0);
-          transform-origin: right center;
-          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .lp-nav-link:hover {
-          color: #E8EDE6;
-        }
-        .lp-nav-link:hover::after {
-          transform: scaleX(1);
-          transform-origin: left center;
-        }
-      `}</style>
-    </>
-  );
-}
-
-function NavLink({ href, children }: { href: string; children: ReactNode }) {
-  return (
-    <a href={href} className="lp-nav-link">
-      {children}
-    </a>
+        <a
+          href="#upload"
+          className="rounded-md bg-white px-4 py-2 text-sm font-semibold tracking-tight text-black transition-all hover:bg-zinc-200 hover:shadow-lg hover:shadow-white/10"
+        >
+          Try for free
+        </a>
+      </nav>
+    </header>
   );
 }
