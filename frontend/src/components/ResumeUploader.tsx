@@ -1,7 +1,9 @@
 "use client";
 
 import { ChangeEvent, DragEvent, FormEvent, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ScoreResult } from "./ScoreCard";
+import { useScore, ScoreData } from "@/context/ScoreContext";
 
 type Props = {
   onResult: (result: ScoreResult) => void;
@@ -19,6 +21,8 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter();
+  const { setData } = useScore();
 
   const setError = (message: string) => {
     setStatus("error");
@@ -105,9 +109,13 @@ export default function ResumeUploader({ onResult, onError, onScored }: Props) {
           formatting: raw.formatting_score,
         },
       };
+
+      // Store full response in context and navigate to score page
+      setData(raw as ScoreData);
       onResult(payload);
       onScored?.(payload);
       setStatus("idle");
+      router.push("/score");
     } catch {
       setError("Scoring service is currently unavailable. You can continue in demo mode.");
       hasError = true;

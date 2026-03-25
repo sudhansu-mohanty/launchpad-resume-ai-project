@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import { DM_Sans } from "next/font/google";
+import { ScoreProvider } from "@/context/ScoreContext";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -28,7 +29,9 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={dmSans.variable}>
-      <body className="bg-black text-white antialiased">{children}</body>
+      <body className="bg-black text-white antialiased">
+        <ScoreProvider>{children}</ScoreProvider>
+      </body>
     </html>
   );
 }

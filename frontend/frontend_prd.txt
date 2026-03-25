@@ -1,0 +1,81 @@
+Aesthetic Description
+                                                                                                                                       "Dark minimal SaaS" — the frontend follows a monochromatic, near-black design language common in premium developer/productivity      tools (think Linear, Vercel, Raycast).                                                                                             
+                                                                                                                                     
+  - Palette: Pure black (#000) background, white (#fff) for primary text and CTAs, zinc grays (zinc-400 through zinc-600) for
+  secondary text and muted elements. Zero color — no blues, greens, or brand hues. Status indicators use white/gray intensity rather
+  than semantic colors.
+  - Typography: DM Sans. Tight tracking everywhere (tracking-tight). Hierarchy through weight (extrabold headings, semibold labels,
+  medium body) rather than size jumps. Tabular nums for score displays.
+  - Surfaces: Cards use ultra-subtle borders (border-white/5 to border-white/10), near-invisible background fills (bg-white/[0.02]),
+  and backdrop-blur-xl glass effects. A custom GlowingEffect component adds a mouse-proximity glow on card borders.
+  - Motion: Entrance animations via fade-up/fade-down keyframes with an aggressive ease-out (cubic-bezier(0.16, 1, 0.3, 1)). Score   
+  counters animate with requestAnimationFrame. Scroll-triggered reveals via IntersectionObserver. A floating WebGL/shader animation  
+  sits behind the hero.
+  - Layout: Single-column, max-width 5xl content area. Sections divided by hairline divide-white/[0.06] lines. Generous vertical     
+  padding. Responsive with sm:/lg: breakpoints — hero score card hides on mobile.
+
+  Overall vibe: quiet confidence, no visual noise, monochrome elegance.
+
+  ---
+  Mini PRD — LaunchPad Resume AI Frontend
+
+  Product
+
+  A single-page web app where job seekers upload a PDF resume and instantly receive an ATS-style score (0–100) with a category       
+  breakdown and actionable feedback.
+
+  Users
+
+  Job seekers preparing applications — primarily early-to-mid career professionals who want to sanity-check their resume before      
+  submitting.
+
+  Current State (v0)
+
+  ┌────────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────┐   
+  │        Area        │                                                 Status                                                  │   
+  ├────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────┤   
+  │ Hero + branding    │ Done — animated score preview, shader BG, CTA                                                           │   
+  ├────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────┤   
+  │ PDF upload         │ Done — drag-and-drop, validation, error states                                                          │   
+  ├────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────┤   
+  │ Score display      │ Done — animated total + 6-category breakdown (Skills, Experience, Projects, Education, Impact,          │   
+  │                    │ Formatting)                                                                                             │   
+  ├────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────┤   
+  │ Recruiter Showcase │ Done — decorative section with mock scan animation and floating insight cards                           │   
+  ├────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────┤   
+  │ FAQ                │ Done — accordion with 5 items                                                                           │   
+  ├────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────┤   
+  │ CTA footer         │ Done                                                                                                    │   
+  ├────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────┤   
+  │ Backend            │ Done — calls POST /resume/extract, maps response to ScoreResult                                         │   
+  │ integration        │                                                                                                         │   
+  └────────────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────┘   
+
+  What Exists but Doesn't Work Yet
+
+  - "Resume Builder" and "Pricing" nav links point to # (placeholder)
+  - "Generate stronger bullets" button in RecruiterShowcase is non-functional
+  - "Apply fixes" step in How It Works has no corresponding feature
+  - Scoring is mocked/static on the backend — no real AI analysis
+  - Strengths/weaknesses arrays are in the type but not rendered in ScoreCard
+  - PostgreSQL and Redis are provisioned but unused
+  - No auth, no saved history, no user accounts
+
+  Key Frontend Gaps (Potential Next Steps)
+
+  1. Render strengths & weaknesses — ScoreResult already carries strengths[] and weaknesses[] but ScoreCard doesn't display them     
+  2. Empty/loading states — no skeleton UI while the upload is processing; just a spinner on the button
+  3. Mobile hero — the animated score card is hidden lg:block, so mobile users see only the copy
+  4. Accessibility — drag-and-drop zone uses role="button" but has no keyboard-accessible file selection feedback; no ARIA live      
+  regions for score updates
+  5. Error recovery — error banner exists but no retry mechanism
+  6. Real scoring — backend still returns mock data; wiring real AI is the biggest unblocked product gap
+  7. Role targeting — FAQ mentions role-fit tuning but no UI for it exists
+  8. Result persistence — no way to save, share, or revisit a score
+
+  Tech Constraints
+
+  - Static export (output: "export") — no SSR, no API routes, no getServerSideProps
+  - No Tailwind in CLAUDE.md — but the codebase has fully adopted Tailwind utility classes (globals.css imports tailwindcss and uses
+  @theme). The CLAUDE.md styling guidance is outdated.
+  - Single API endpoint — everything routes through POST /resume/extract
