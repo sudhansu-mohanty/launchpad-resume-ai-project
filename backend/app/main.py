@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.services.resume_analysis import analyze_resume
 from app.services.ai_structurer import ai_structure_resume
 from app.services.resume_scoring import score_resume
+from app.services.job_service import search_jobs
 import pdfplumber
 import re
 import io
@@ -86,3 +87,6 @@ async def extract_resume(file: UploadFile = File(...)):
         "structured_resume": structured_resume,
         "raw_text": text
     }
+@app.get("/jobs")
+def get_jobs(query: str):
+    return search_jobs(query)
