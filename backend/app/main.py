@@ -90,3 +90,7 @@ async def extract_resume(file: UploadFile = File(...)):
 @app.get("/jobs")
 def get_jobs(query: str):
     return search_jobs(query)
+
+@app.get("/favicon.ico")
+def favicon():
+    return {}
